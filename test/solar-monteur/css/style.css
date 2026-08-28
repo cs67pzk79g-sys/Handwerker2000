@@ -579,6 +579,95 @@ img, svg { display: block; max-width: 100%; }
   text-align: center;
 }
 
+/* ---------- FAQ ---------- */
+.faq-list { display: flex; flex-direction: column; gap: 12px; max-width: 780px; }
+
+.faq-item {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: #fff;
+  overflow: hidden;
+}
+
+.faq-item summary {
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 22px;
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
+.faq-item summary::-webkit-details-marker { display: none; }
+
+.faq-item summary::after {
+  content: "+";
+  flex-shrink: 0;
+  font-size: 1.4rem;
+  line-height: 1;
+  color: var(--color-blue);
+  transition: transform 0.2s ease;
+}
+
+.faq-item[open] summary::after { transform: rotate(45deg); }
+.faq-item p { padding: 0 22px 20px; margin: 0; }
+
+/* ---------- Response-time promise ---------- */
+.response-badge {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  background: #fff;
+  border: 1px solid var(--color-border);
+  border-left: 4px solid var(--color-accent);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  margin: 24px 0;
+}
+
+.response-badge .response-icon { font-size: 1.5rem; line-height: 1; }
+.response-badge strong { display: block; color: var(--color-primary); font-size: 0.98rem; }
+.response-badge span { font-size: 0.88rem; color: var(--color-text-muted); }
+
+/* ---------- Floating 24/7 contact button ---------- */
+.fab {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--color-primary);
+  color: #fff;
+  padding: 14px 20px;
+  border-radius: 999px;
+  box-shadow: 0 12px 28px rgba(15, 41, 66, 0.3);
+  font-weight: 600;
+  font-size: 0.92rem;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.fab:hover { background: var(--color-primary-dark); transform: translateY(-2px); }
+
+.fab .fab-badge {
+  background: var(--color-accent);
+  color: var(--color-primary-dark);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  padding: 2px 7px;
+  border-radius: 999px;
+}
+
+@media (max-width: 480px) {
+  .fab { padding: 12px 16px; }
+  .fab .fab-label { display: none; }
+}
+
 /* ---------- Footer ---------- */
 .site-footer { background: var(--color-primary-dark); color: #c9d8ea; padding: 60px 0 0; }
 

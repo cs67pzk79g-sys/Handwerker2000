@@ -7,10 +7,10 @@ Quelle: TikTok-Video "20 Dinge die du Claude sagen sollst bevor du deine Website
 - [x] 3. Interne Links
 - [x] 4. Danke-Seite (nach Kontaktformular/Anfrage)
 - [x] 5. Breadcrumbs
-- [ ] 6. Kundenprojekte / Referenzen
-- [ ] 7. 5 FAQs
-- [ ] 8. Antwortzeitversprechen
-- [ ] 9. 24/7-Kontakt-Button
+- [x] 6. Kundenprojekte / Referenzen
+- [x] 7. 5 FAQs
+- [x] 8. Antwortzeitversprechen
+- [x] 9. 24/7-Kontakt-Button
 - [x] 10. robots.txt
 - [x] 11. Eigener Seitentitel (Title-Tag)
 - [x] 12. Meta-Beschreibungen
