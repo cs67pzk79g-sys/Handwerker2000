@@ -183,6 +183,66 @@ img, svg { display: block; max-width: 100%; }
 .btn-lg { padding: 15px 28px; font-size: 1rem; }
 .btn-block { width: 100%; }
 
+/* ---------- Breadcrumbs ---------- */
+.breadcrumbs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  padding: 18px 0;
+}
+
+.breadcrumbs a { color: var(--color-blue); }
+.breadcrumbs a:hover { text-decoration: underline; }
+.breadcrumbs .sep { color: var(--color-border); }
+.breadcrumbs .current { color: var(--color-text); font-weight: 500; }
+
+/* ---------- Info page (404, Danke) ---------- */
+.info-page {
+  padding: 40px 0 100px;
+  text-align: center;
+}
+
+.info-page .info-code {
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: clamp(3rem, 10vw, 5.5rem);
+  color: var(--color-accent);
+  margin: 0 0 8px;
+  line-height: 1;
+}
+
+.info-page .info-icon { font-size: 3.4rem; margin: 0 0 8px; }
+
+.info-page h1 { font-size: clamp(1.5rem, 3vw, 2rem); margin-bottom: 14px; }
+
+.info-page p.info-lead {
+  max-width: 52ch;
+  margin: 0 auto 32px;
+  font-size: 1.05rem;
+}
+
+.info-page .info-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 14px;
+  margin-bottom: 48px;
+}
+
+.info-page .info-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px 24px;
+  font-size: 0.95rem;
+}
+
+.info-page .info-links a { color: var(--color-blue); }
+.info-page .info-links a:hover { text-decoration: underline; }
+
 /* ---------- Hero ---------- */
 .hero { background: linear-gradient(180deg, #f6f9fd 0%, #ffffff 70%); overflow: hidden; }
 

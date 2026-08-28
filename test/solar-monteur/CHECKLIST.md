@@ -2,11 +2,11 @@
 
 Quelle: TikTok-Video "20 Dinge die du Claude sagen sollst bevor du deine Website launchst" (@Alan | Automatisierung&Beratung)
 
-- [ ] 1. Eigene 404-Seite
-- [ ] 2. Klarer CTA (Call-to-Action)
-- [ ] 3. Interne Links
-- [ ] 4. Danke-Seite (nach Kontaktformular/Anfrage)
-- [ ] 5. Breadcrumbs
+- [x] 1. Eigene 404-Seite
+- [x] 2. Klarer CTA (Call-to-Action)
+- [x] 3. Interne Links
+- [x] 4. Danke-Seite (nach Kontaktformular/Anfrage)
+- [x] 5. Breadcrumbs
 - [ ] 6. Kundenprojekte / Referenzen
 - [ ] 7. 5 FAQs
 - [ ] 8. Antwortzeitversprechen
