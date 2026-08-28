@@ -11,9 +11,9 @@ Quelle: TikTok-Video "20 Dinge die du Claude sagen sollst bevor du deine Website
 - [ ] 7. 5 FAQs
 - [ ] 8. Antwortzeitversprechen
 - [ ] 9. 24/7-Kontakt-Button
-- [ ] 10. robots.txt
-- [ ] 11. Eigener Seitentitel (Title-Tag)
-- [ ] 12. Meta-Beschreibungen
+- [x] 10. robots.txt
+- [x] 11. Eigener Seitentitel (Title-Tag)
+- [x] 12. Meta-Beschreibungen
 - [ ] 13. Vorschaubilder (Social/OG-Images)
 - [ ] 14. Karte + Anfahrt
 - [ ] 15. Echte Bewertungen
