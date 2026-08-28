@@ -107,7 +107,6 @@
 
   // ---------- Kontaktformular (Demo, kein Backend) ----------
   var form = document.getElementById("kontaktForm");
-  var formSuccess = document.getElementById("formSuccess");
 
   if (form) {
     form.addEventListener("submit", function (event) {
@@ -118,11 +117,7 @@
         return;
       }
 
-      if (formSuccess) {
-        formSuccess.hidden = false;
-      }
-      form.reset();
-      updateCalculator();
+      window.location.href = "danke.html";
     });
   }
 
