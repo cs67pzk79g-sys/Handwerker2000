@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Handwerker2000 – Vorzeigeseiten</title>
+<style>
+  :root {
+    --bg: #0f172a;
+    --card: #f8fafc;
+    --text: #1c2b3a;
+    --muted: #64748b;
+    --accent: #2f80ed;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg);
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    padding: 40px 20px;
+  }
+  main {
+    max-width: 640px;
+    width: 100%;
+  }
+  h1 {
+    color: #f8fafc;
+    font-size: 1.6rem;
+    margin: 0 0 8px;
+  }
+  p.intro {
+    color: #94a3b8;
+    margin: 0 0 32px;
+  }
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  li a {
+    display: block;
+    background: var(--card);
+    color: var(--text);
+    text-decoration: none;
+    border-radius: 12px;
+    padding: 18px 22px;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  li a:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
+  }
+  li a strong {
+    display: block;
+    font-size: 1.05rem;
+    margin-bottom: 4px;
+  }
+  li a span {
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+</style>
+</head>
+<body>
+<main>
+  <h1>Handwerker2000 – Vorzeigeseiten</h1>
+  <p class="intro">Demo-Webseiten für verschiedene Handwerksbetriebe.</p>
+  <ul>
+    <li>
+      <a href="solar-monteur/">
+        <strong>☀️ Sonnenwerk Solartechnik</strong>
+        <span>Photovoltaik-Monteur – Leistungen, Rechner, Referenzen &amp; Kontakt</span>
+      </a>
+    </li>
+  </ul>
+</main>
+</body>
+</html>
