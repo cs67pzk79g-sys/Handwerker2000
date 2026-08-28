@@ -19,6 +19,16 @@ Quelle: TikTok-Video "20 Dinge die du Claude sagen sollst bevor du deine Website
 - [x] 15. Echte Bewertungen
 - [x] 16. Alt-Texte für Bilder (geprüft: keine `<img>`-Elemente ohne Alt-Text vorhanden; Projektfotos sind dekorative CSS-Flächen mit beschreibendem `<figcaption>`)
 - [x] 17. Local Schema (strukturierte Daten / LocalBusiness)
-- [ ] 18. Google Analytics
-- [ ] 19. Datenschutzseite
-- [ ] 20. Team-Foto
+- [x] 18. Google Analytics (als deaktivierter Platzhalter hinterlegt, siehe Hinweis unten)
+- [x] 19. Datenschutzseite
+- [x] 20. Team-Foto (Illustrationen statt echter Fotos, da fiktiver Demo-Betrieb)
+
+## Alle 20 Punkte abgehakt 🎉
+
+Zwei Hinweise für den echten Go-Live:
+
+- **Google Analytics** ist bewusst nur als auskommentierter Platzhalter in den
+  `<head>`-Bereichen hinterlegt (echte Messungs-ID einsetzen und erst nach
+  einer DSGVO-konformen Cookie-Einwilligung aktivieren).
+- **og:url / og:image** nutzen die fiktive Demo-Domain `sonnenwerk-solar.de` –
+  vor dem Launch durch die echte Domain ersetzen.

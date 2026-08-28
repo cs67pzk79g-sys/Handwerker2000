@@ -71,6 +71,23 @@
   }
 }
 </script>
+
+<!--
+  Google Analytics (GA4) – bereit zum Aktivieren
+  1. Messungs-ID unter analytics.google.com anlegen und "G-XXXXXXXXXX" ersetzen
+  2. Die zwei <script>-Tags unten einkommentieren
+  3. WICHTIG (DSGVO): In Deutschland braucht es vorher eine Cookie-/Consent-
+     Lösung, die GA erst nach Einwilligung lädt (z. B. Consent-Mode/Banner).
+     Bis dahin bleibt dieser Block bewusst deaktiviert.
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){ dataLayer.push(arguments); }
+  gtag('js', new Date());
+  gtag('config', 'G-XXXXXXXXXX');
+</script>
+-->
 </head>
 <body>
 
@@ -92,6 +109,7 @@
       <a href="#ablauf">Ablauf</a>
       <a href="#rechner">Rechner</a>
       <a href="#referenzen">Referenzen</a>
+      <a href="#team">Team</a>
       <a href="#foerderung">Förderung</a>
       <a href="#faq">FAQ</a>
       <a href="#kontakt">Kontakt</a>
@@ -371,6 +389,44 @@
     </div>
   </section>
 
+  <!-- TEAM -->
+  <section id="team" class="section section-alt">
+    <div class="container">
+      <p class="section-eyebrow reveal">Unser Team</p>
+      <h2 class="section-title reveal">Die Menschen hinter Sonnenwerk Solartechnik</h2>
+      <p class="section-sub reveal">Ein eingespieltes Team aus Meisterbetrieb, Planung und Montage &ndash; Ihre Ansprechpartner von der ersten Beratung bis zur Inbetriebnahme.</p>
+
+      <div class="grid grid-3">
+        <article class="card team-card reveal">
+          <div class="team-avatar team-avatar-1" aria-hidden="true">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" fill="#2f80ed"/><path d="M4 20c0-4.4 3.6-8 8-8s8 3.6 8 8" stroke="#2f80ed" stroke-width="2" stroke-linecap="round"/></svg>
+          </div>
+          <h3>Markus Vogt</h3>
+          <span class="team-role">Inhaber &amp; Elektromeister</span>
+          <p>Verantwortet Planung und Qualität jeder Anlage &ndash; seit 17 Jahren im Photovoltaik-Handwerk.</p>
+        </article>
+
+        <article class="card team-card reveal">
+          <div class="team-avatar team-avatar-2" aria-hidden="true">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" fill="#e8990a"/><path d="M4 20c0-4.4 3.6-8 8-8s8 3.6 8 8" stroke="#e8990a" stroke-width="2" stroke-linecap="round"/></svg>
+          </div>
+          <h3>Sabine Krüger</h3>
+          <span class="team-role">Kundenberatung &amp; Planung</span>
+          <p>Ihre erste Ansprechpartnerin &ndash; von der Dachanalyse bis zum fertigen Angebot.</p>
+        </article>
+
+        <article class="card team-card reveal">
+          <div class="team-avatar team-avatar-3" aria-hidden="true">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" fill="#0f2942"/><path d="M4 20c0-4.4 3.6-8 8-8s8 3.6 8 8" stroke="#0f2942" stroke-width="2" stroke-linecap="round"/></svg>
+          </div>
+          <h3>Jonas Weller</h3>
+          <span class="team-role">Teamleiter Montage</span>
+          <p>Sorgt mit seinem Montageteam für saubere, termingerechte Installation vor Ort.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
   <!-- FÖRDERUNG -->
   <section id="foerderung" class="section">
     <div class="container">
@@ -553,7 +609,7 @@
         </div>
         <div class="field field-checkbox">
           <input type="checkbox" id="datenschutz" name="datenschutz" required>
-          <label for="datenschutz">Ich habe die Datenschutzhinweise zur Kenntnis genommen. *</label>
+          <label for="datenschutz">Ich habe die <a href="datenschutz.html" target="_blank" rel="noopener">Datenschutzhinweise</a> zur Kenntnis genommen. *</label>
         </div>
         <button type="submit" class="btn btn-primary btn-lg btn-block">Unverbindlich anfragen</button>
         <p class="form-note">Demo-Formular &ndash; es werden keine Daten versendet oder gespeichert.</p>
@@ -580,11 +636,12 @@
     <div class="footer-col">
       <h4>Unternehmen</h4>
       <a href="#referenzen">Referenzen</a>
+      <a href="#team">Team</a>
       <a href="#foerderung">Förderung</a>
       <a href="#faq">FAQ</a>
       <a href="#kontakt">Kontakt</a>
       <a href="#">Impressum</a>
-      <a href="#">Datenschutz</a>
+      <a href="datenschutz.html">Datenschutz</a>
     </div>
     <div class="footer-col">
       <h4>Kontakt</h4>
