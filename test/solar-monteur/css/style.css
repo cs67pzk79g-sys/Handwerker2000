@@ -111,7 +111,7 @@ img, svg { display: block; max-width: 100%; }
 
 .header-cta { display: flex; align-items: center; gap: 14px; flex-shrink: 0; }
 
-.nav-cta-mobile { display: none; }
+.btn.nav-cta-mobile { display: none; }
 
 .phone-badge {
   display: flex;
@@ -784,7 +784,7 @@ img, svg { display: block; max-width: 100%; }
     box-shadow: var(--shadow);
   }
 
-  .nav-cta-mobile { display: inline-flex; margin-top: 4px; }
+  .btn.nav-cta-mobile { display: inline-flex; margin-top: 4px; }
 
   .hero-inner { grid-template-columns: 1fr; padding-top: 48px; }
   .hero-art { order: -1; max-width: 320px; margin: 0 auto; }
