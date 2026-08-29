@@ -311,6 +311,21 @@ function initPv3d(prefersReducedMotion) {
         }
       }, 256, 256, 3, 2, true);
 
+      // Normal map for the wall siding: a subtle bump at each groove edge
+      // so raking light actually models the surface instead of it reading
+      // as flat color. Normal maps must stay linear (isColorMap: false).
+      var wallNormalTexture = canvasTexture(function (ctx, w, h) {
+        ctx.fillStyle = "rgb(128,128,255)";
+        ctx.fillRect(0, 0, w, h);
+        var x;
+        for (x = 0; x < w; x += 16) {
+          ctx.fillStyle = "rgb(150,128,255)";
+          ctx.fillRect(x - 1, 0, 1, h);
+          ctx.fillStyle = "rgb(105,128,255)";
+          ctx.fillRect(x + 1, 0, 1, h);
+        }
+      }, 256, 256, 3, 2, false);
+
       var roofTexture = canvasTexture(function (ctx, w, h) {
         ctx.fillStyle = "#1a3350";
         ctx.fillRect(0, 0, w, h);
@@ -324,6 +339,20 @@ function initPv3d(prefersReducedMotion) {
           ctx.beginPath(); ctx.moveTo(0, y + 2); ctx.lineTo(w, y + 2); ctx.stroke();
         }
       }, 256, 256, 4, 5, true);
+
+      // Normal map for the roof: a bump at each shingle-row edge so the
+      // slope reads as overlapping tiles under raking light, not a slab.
+      var roofNormalTexture = canvasTexture(function (ctx, w, h) {
+        ctx.fillStyle = "rgb(128,128,255)";
+        ctx.fillRect(0, 0, w, h);
+        var y;
+        for (y = 0; y < h; y += 18) {
+          ctx.fillStyle = "rgb(128,150,255)";
+          ctx.fillRect(0, y - 1, w, 1);
+          ctx.fillStyle = "rgb(128,100,255)";
+          ctx.fillRect(0, y + 1, w, 2);
+        }
+      }, 256, 256, 4, 5, false);
 
       // Roughness *variation* for the roof (a data map, not a color map) so
       // it doesn't read as one flat, uniform plastic-y surface.
@@ -359,15 +388,15 @@ function initPv3d(prefersReducedMotion) {
       var sunLight = new THREE.DirectionalLight(0xfff2df, 0.85);
       sunLight.position.set(7, 5.5, 3); // ~36° elevation – visible contrast, longer shadows
       sunLight.castShadow = true;
-      sunLight.shadow.mapSize.set(1024, 1024);
+      sunLight.shadow.mapSize.set(2048, 2048);
       sunLight.shadow.camera.left = -4.5;
       sunLight.shadow.camera.right = 4.5;
       sunLight.shadow.camera.top = 4.5;
       sunLight.shadow.camera.bottom = -4.5;
       sunLight.shadow.camera.near = 1;
       sunLight.shadow.camera.far = 20;
-      sunLight.shadow.bias = -0.0025;
-      sunLight.shadow.radius = 3;
+      sunLight.shadow.bias = -0.0018;
+      sunLight.shadow.radius = 2.2;
       scene.add(sunLight);
 
       // ---------- Reflection source: a small cube camera above the roof ----------
@@ -428,8 +457,36 @@ function initPv3d(prefersReducedMotion) {
 
       var houseGroup = new THREE.Group();
 
+      // ---------- Fake contact AO ----------
+      // A soft dark halo hugging the wall footprint, on top of (and tighter
+      // than) the world-space shadowBlob. Parented to houseGroup so it
+      // rotates with the house instead of staying fixed like a real shadow.
+      var aoCanvas = document.createElement("canvas");
+      aoCanvas.width = 256; aoCanvas.height = 256;
+      var aoCtx = aoCanvas.getContext("2d");
+      var aoGrad = aoCtx.createRadialGradient(128, 128, 30, 128, 128, 128);
+      aoGrad.addColorStop(0, "rgba(5,10,20,0.32)");
+      aoGrad.addColorStop(1, "rgba(5,10,20,0)");
+      aoCtx.fillStyle = aoGrad;
+      aoCtx.fillRect(0, 0, 256, 256);
+      var contactAOMat = new THREE.MeshBasicMaterial({
+        map: new THREE.CanvasTexture(aoCanvas),
+        transparent: true,
+        depthWrite: false
+      });
+      var contactAO = new THREE.Mesh(new THREE.PlaneGeometry(6.4, 4.8), contactAOMat);
+      contactAO.rotation.x = -90 * DEG;
+      contactAO.position.set(0, 0.005, 0);
+      houseGroup.add(contactAO);
+
       // ---------- Walls ----------
-      var wallMat = new THREE.MeshStandardMaterial({ map: wallTexture, roughness: 0.85, metalness: 0 });
+      var wallMat = new THREE.MeshStandardMaterial({
+        map: wallTexture,
+        normalMap: wallNormalTexture,
+        normalScale: new THREE.Vector2(0.5, 0.5),
+        roughness: 0.85,
+        metalness: 0
+      });
       var walls = new THREE.Mesh(new THREE.BoxGeometry(4.6, 2.2, 3.2), wallMat);
       walls.position.y = 1.1;
       walls.castShadow = true;
@@ -513,6 +570,8 @@ function initPv3d(prefersReducedMotion) {
       // gives a clearly visible overhang at the gable ends.
       var roofMat = new THREE.MeshStandardMaterial({
         map: roofTexture,
+        normalMap: roofNormalTexture,
+        normalScale: new THREE.Vector2(0.7, 0.7),
         roughnessMap: roofRoughnessTexture,
         roughness: 0.55,
         metalness: 0.06
