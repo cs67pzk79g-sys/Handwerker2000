@@ -1,5 +1,5 @@
 [build]
   publish = "test"
-  # Skip deploy-preview builds (one per PR) to save build minutes.
-  # Exit 0 = skip, exit 1 = build. Production/branch deploys still run.
-  ignore = "if [ \"$CONTEXT\" = \"deploy-preview\" ]; then exit 0; else exit 1; fi"
+  # Deploy previews temporarily enabled for this PR (bigger UI change,
+  # worth eyeballing before merge). Restored to skip-by-default right
+  # after in a follow-up commit.
