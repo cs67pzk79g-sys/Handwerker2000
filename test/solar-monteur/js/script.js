@@ -264,25 +264,105 @@ function initPv3d(prefersReducedMotion) {
     try {
       renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
       renderer.setSize(width, height);
+      renderer.shadowMap.enabled = true;
+      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
       var scene = new THREE.Scene();
       var camera = new THREE.PerspectiveCamera(38, width / height, 0.1, 100);
       camera.position.set(5.9, 3.9, 7.6);
 
       var DEG = Math.PI / 180;
+      var skyColor = new THREE.Color(0xbcd8ff);
+
+      // ---------- Small procedural textures (no external images needed) ----------
+      function canvasTexture(draw, w, h, repeatX, repeatY) {
+        var c = document.createElement("canvas");
+        c.width = w; c.height = h;
+        draw(c.getContext("2d"), w, h);
+        var tex = new THREE.CanvasTexture(c);
+        if (repeatX) {
+          tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
+          tex.repeat.set(repeatX, repeatY);
+        }
+        return tex;
+      }
+
+      var wallTexture = canvasTexture(function (ctx, w, h) {
+        ctx.fillStyle = "#f2ead9";
+        ctx.fillRect(0, 0, w, h);
+        ctx.strokeStyle = "rgba(150,128,98,0.16)";
+        ctx.lineWidth = 1;
+        var x;
+        for (x = 0; x < w; x += 16) {
+          ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke();
+        }
+        ctx.strokeStyle = "rgba(150,128,98,0.07)";
+        var y;
+        for (y = 0; y < h; y += 8) {
+          ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
+        }
+      }, 256, 256, 3, 2);
+
+      var roofTexture = canvasTexture(function (ctx, w, h) {
+        ctx.fillStyle = "#1a3350";
+        ctx.fillRect(0, 0, w, h);
+        var y;
+        for (y = 0; y < h; y += 18) {
+          ctx.strokeStyle = "rgba(0,0,0,0.3)";
+          ctx.lineWidth = 2;
+          ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
+          ctx.strokeStyle = "rgba(255,255,255,0.06)";
+          ctx.lineWidth = 1;
+          ctx.beginPath(); ctx.moveTo(0, y + 2); ctx.lineTo(w, y + 2); ctx.stroke();
+        }
+      }, 256, 256, 4, 5);
+
+      var grassTexture = canvasTexture(function (ctx, w, h) {
+        ctx.fillStyle = "#d8ecd4";
+        ctx.fillRect(0, 0, w, h);
+        var i, gx, gy;
+        for (i = 0; i < 900; i++) {
+          gx = Math.random() * w; gy = Math.random() * h;
+          ctx.fillStyle = Math.random() > 0.5 ? "rgba(90,150,80,0.16)" : "rgba(210,235,200,0.4)";
+          ctx.fillRect(gx, gy, 2, 2);
+        }
+      }, 256, 256, 5, 5);
 
       // ---------- Lighting: warm sun + cool sky fill + soft ambient ----------
-      scene.add(new THREE.HemisphereLight(0xbcd8ff, 0x8a7457, 0.55));
-      scene.add(new THREE.AmbientLight(0xffffff, 0.28));
-      var sunLight = new THREE.DirectionalLight(0xfff1d6, 1.05);
+      scene.add(new THREE.HemisphereLight(0xbcd8ff, 0x8a7457, 0.5));
+      scene.add(new THREE.AmbientLight(0xffffff, 0.22));
+      var sunLight = new THREE.DirectionalLight(0xfff1d6, 1.15);
       sunLight.position.set(6, 8.5, 4);
+      sunLight.castShadow = true;
+      sunLight.shadow.mapSize.set(1024, 1024);
+      sunLight.shadow.camera.left = -4.5;
+      sunLight.shadow.camera.right = 4.5;
+      sunLight.shadow.camera.top = 4.5;
+      sunLight.shadow.camera.bottom = -4.5;
+      sunLight.shadow.camera.near = 1;
+      sunLight.shadow.camera.far = 20;
+      sunLight.shadow.bias = -0.0025;
+      sunLight.shadow.radius = 3;
       scene.add(sunLight);
 
+      // ---------- Reflection source: a small cube camera above the roof ----------
+      // Only updated every few frames – cheap, and gives windows/panels a real
+      // (if simplified) sky+ground reflection instead of a flat color.
+      var cubeRenderTarget = new THREE.WebGLCubeRenderTarget(128, {
+        format: THREE.RGBFormat,
+        generateMipmaps: true,
+        minFilter: THREE.LinearMipmapLinearFilter
+      });
+      var cubeCamera = new THREE.CubeCamera(0.1, 50, cubeRenderTarget);
+      cubeCamera.position.set(0, 3.3, 0.4);
+      scene.add(cubeCamera);
+
       // ---------- Ground: grass disc + soft contact shadow ----------
-      var groundMat = new THREE.MeshStandardMaterial({ color: 0xdcecd9, roughness: 1, metalness: 0 });
+      var groundMat = new THREE.MeshStandardMaterial({ map: grassTexture, roughness: 1, metalness: 0 });
       var ground = new THREE.Mesh(new THREE.CircleGeometry(6.2, 32), groundMat);
       ground.rotation.x = -90 * DEG;
       ground.position.y = -0.02;
+      ground.receiveShadow = true;
       scene.add(ground);
 
       var shadowCanvas = document.createElement("canvas");
@@ -290,7 +370,7 @@ function initPv3d(prefersReducedMotion) {
       shadowCanvas.height = 128;
       var shadowCtx = shadowCanvas.getContext("2d");
       var grad = shadowCtx.createRadialGradient(64, 64, 0, 64, 64, 64);
-      grad.addColorStop(0, "rgba(10,20,35,0.38)");
+      grad.addColorStop(0, "rgba(10,20,35,0.3)");
       grad.addColorStop(1, "rgba(10,20,35,0)");
       shadowCtx.fillStyle = grad;
       shadowCtx.fillRect(0, 0, 128, 128);
@@ -299,9 +379,9 @@ function initPv3d(prefersReducedMotion) {
         transparent: true,
         depthWrite: false
       });
-      var shadowBlob = new THREE.Mesh(new THREE.PlaneGeometry(6.6, 5.4), shadowMat);
+      var shadowBlob = new THREE.Mesh(new THREE.PlaneGeometry(5.2, 4), shadowMat);
       shadowBlob.rotation.x = -90 * DEG;
-      shadowBlob.position.set(0.3, 0, 0.15);
+      shadowBlob.position.set(0, -0.01, 0);
       scene.add(shadowBlob);
 
       // ---------- Bushes ----------
@@ -312,6 +392,7 @@ function initPv3d(prefersReducedMotion) {
         );
         bush.position.set(x, 0.26 * scale, z);
         bush.scale.set(scale, scale * 0.8, scale);
+        bush.castShadow = true;
         scene.add(bush);
       }
       addBush(-2.75, 1.85, 1, 0x4c8c3a);
@@ -321,15 +402,18 @@ function initPv3d(prefersReducedMotion) {
       var houseGroup = new THREE.Group();
 
       // ---------- Walls ----------
-      var wallMat = new THREE.MeshStandardMaterial({ color: 0xf2ead9, roughness: 0.9, metalness: 0 });
+      var wallMat = new THREE.MeshStandardMaterial({ map: wallTexture, roughness: 0.85, metalness: 0 });
       var walls = new THREE.Mesh(new THREE.BoxGeometry(4.6, 2.2, 3.2), wallMat);
       walls.position.y = 1.1;
+      walls.castShadow = true;
+      walls.receiveShadow = true;
       houseGroup.add(walls);
 
       // ---------- Door ----------
       var doorMat = new THREE.MeshStandardMaterial({ color: 0xe8990a, roughness: 0.55 });
       var door = new THREE.Mesh(new THREE.BoxGeometry(0.62, 1.3, 0.06), doorMat);
       door.position.set(-1.35, 0.65, 1.63);
+      door.castShadow = true;
       houseGroup.add(door);
       var doorknob = new THREE.Mesh(
         new THREE.SphereGeometry(0.035, 8, 8),
@@ -338,21 +422,43 @@ function initPv3d(prefersReducedMotion) {
       doorknob.position.set(-1.15, 0.65, 1.67);
       houseGroup.add(doorknob);
 
-      // ---------- Windows ----------
+      // ---------- Windows (reflective glass via the cube camera) ----------
       var winFrameMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.6 });
-      var winGlassMat = new THREE.MeshStandardMaterial({
-        color: 0xbfe0ff, roughness: 0.15, metalness: 0.1, transparent: true, opacity: 0.88
+      var winGlassMat = new THREE.MeshPhysicalMaterial({
+        color: 0x9fc7ea,
+        roughness: 0.08,
+        metalness: 0.1,
+        reflectivity: 0.9,
+        clearcoat: 0.5,
+        clearcoatRoughness: 0.15,
+        envMap: cubeRenderTarget.texture,
+        envMapIntensity: 1.3,
+        transparent: true,
+        opacity: 0.82
       });
 
       function addWindow(x, y, z, rotY) {
-        var frame = new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.6, 0.06), winFrameMat);
-        var glass = new THREE.Mesh(new THREE.BoxGeometry(0.48, 0.48, 0.03), winGlassMat);
-        var vBar = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.48, 0.05), winFrameMat);
-        var hBar = new THREE.Mesh(new THREE.BoxGeometry(0.48, 0.04, 0.05), winFrameMat);
+        // The frame sits flush on the wall; the glass (and mullion bars)
+        // are pushed outward along the window's own facing direction via
+        // translateZ, so they sit in front of the frame instead of being
+        // buried inside its solid geometry (which made them invisible).
+        var frame = new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.6, 0.05), winFrameMat);
+        var glass = new THREE.Mesh(new THREE.BoxGeometry(0.46, 0.46, 0.03), winGlassMat);
+        var vBar = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.46, 0.05), winFrameMat);
+        var hBar = new THREE.Mesh(new THREE.BoxGeometry(0.46, 0.04, 0.05), winFrameMat);
+
         [frame, glass, vBar, hBar].forEach(function (mesh) {
           mesh.position.set(x, y, z);
           if (rotY) mesh.rotation.y = rotY;
         });
+        glass.translateZ(0.045);
+        vBar.translateZ(0.047);
+        hBar.translateZ(0.047);
+
+        frame.castShadow = true;
+        vBar.castShadow = true;
+        hBar.castShadow = true;
+
         houseGroup.add(frame);
         houseGroup.add(glass);
         houseGroup.add(vBar);
@@ -361,22 +467,26 @@ function initPv3d(prefersReducedMotion) {
       addWindow(0.55, 1.3, 1.63, 0);
       addWindow(1.55, 1.3, 1.63, 0);
       addWindow(2.3, 1.3, 0, 90 * DEG);
-      addWindow(-2.3, 1.3, 0.5, 90 * DEG);
-      addWindow(-0.6, 1.3, -1.63, 0);
-      addWindow(0.6, 1.3, -1.63, 0);
+      addWindow(-2.3, 1.3, 0.5, -90 * DEG);
+      addWindow(-0.6, 1.3, -1.63, 180 * DEG);
+      addWindow(0.6, 1.3, -1.63, 180 * DEG);
 
       // ---------- Roof ----------
-      var roofMat = new THREE.MeshStandardMaterial({ color: 0x1a3350, roughness: 0.65, metalness: 0.05 });
+      var roofMat = new THREE.MeshStandardMaterial({ map: roofTexture, roughness: 0.6, metalness: 0.08 });
       var roofGeo = new THREE.BoxGeometry(2.9, 0.12, 3.7);
 
       var roofLeft = new THREE.Mesh(roofGeo, roofMat);
       roofLeft.position.set(-1.28, 2.55, 0);
       roofLeft.rotation.z = 24 * DEG;
+      roofLeft.castShadow = true;
+      roofLeft.receiveShadow = true;
       houseGroup.add(roofLeft);
 
       var roofRight = new THREE.Mesh(roofGeo, roofMat);
       roofRight.position.set(1.28, 2.55, 0);
       roofRight.rotation.z = -24 * DEG;
+      roofRight.castShadow = true;
+      roofRight.receiveShadow = true;
       houseGroup.add(roofRight);
 
       var ridge = new THREE.Mesh(
@@ -396,8 +506,30 @@ function initPv3d(prefersReducedMotion) {
       addFascia(roofLeft, -1.47);
       addFascia(roofRight, 1.47);
 
+      // ---------- Chimney ----------
+      var chimneyMat = new THREE.MeshStandardMaterial({ color: 0x8a5a45, roughness: 0.85 });
+      var chimney = new THREE.Mesh(new THREE.BoxGeometry(0.28, 0.7, 0.28), chimneyMat);
+      chimney.position.set(-1.55, 2.75, -0.6);
+      chimney.castShadow = true;
+      houseGroup.add(chimney);
+      var chimneyCap = new THREE.Mesh(
+        new THREE.BoxGeometry(0.36, 0.06, 0.36),
+        new THREE.MeshStandardMaterial({ color: 0x5c3a2c, roughness: 0.7 })
+      );
+      chimneyCap.position.set(-1.55, 3.11, -0.6);
+      houseGroup.add(chimneyCap);
+
       // ---------- Solar panels: 2 rows x 3 cols with a visible cell grid ----------
-      var panelMat = new THREE.MeshStandardMaterial({ color: 0x14243a, roughness: 0.5, metalness: 0.2 });
+      var panelMat = new THREE.MeshPhysicalMaterial({
+        color: 0x101f34,
+        roughness: 0.32,
+        metalness: 0.25,
+        reflectivity: 0.6,
+        clearcoat: 0.35,
+        clearcoatRoughness: 0.2,
+        envMap: cubeRenderTarget.texture,
+        envMapIntensity: 0.8
+      });
       var panelFrameMat = new THREE.MeshStandardMaterial({ color: 0xd7dee5, roughness: 0.4, metalness: 0.5 });
       var gridLineMat = new THREE.LineBasicMaterial({ color: 0x3a5f8a });
 
@@ -435,6 +567,8 @@ function initPv3d(prefersReducedMotion) {
           panel = new THREE.Mesh(panelGeo, panelMat);
           frame.position.set(localX, 0.045, localZ);
           panel.position.set(localX, 0.07, localZ);
+          frame.castShadow = true;
+          panel.castShadow = true;
           roofRight.add(frame);
           roofRight.add(panel);
 
@@ -510,10 +644,30 @@ function initPv3d(prefersReducedMotion) {
         }, { threshold: 0.05 }).observe(stage);
       }
 
+      function updateReflections() {
+        // Hide the house while capturing so its own reflective materials
+        // don't read from the same render target they're being written to
+        // (a "framebuffer feedback loop") – reflections end up showing the
+        // sky/ground/surroundings, which is what glass mostly reflects anyway.
+        houseGroup.visible = false;
+        scene.background = skyColor;
+        cubeCamera.update(renderer, scene);
+        scene.background = null;
+        houseGroup.visible = true;
+      }
+      updateReflections();
+
+      var frameCount = 0;
       function animate() {
         requestAnimationFrame(animate);
         if (!isVisible) return;
         controls.update();
+
+        frameCount++;
+        if (frameCount % 15 === 0) {
+          updateReflections();
+        }
+
         renderer.render(scene, camera);
       }
       animate();
