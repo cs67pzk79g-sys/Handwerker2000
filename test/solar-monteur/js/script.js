@@ -266,6 +266,11 @@ function initPv3d(prefersReducedMotion) {
       renderer.setSize(width, height);
       renderer.shadowMap.enabled = true;
       renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+      // r128 predates the newer outputColorSpace/SRGBColorSpace API – this is
+      // the equivalent for this Three.js version.
+      renderer.outputEncoding = THREE.sRGBEncoding;
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 0.82;
 
       var scene = new THREE.Scene();
       var camera = new THREE.PerspectiveCamera(38, width / height, 0.1, 100);
@@ -275,7 +280,9 @@ function initPv3d(prefersReducedMotion) {
       var skyColor = new THREE.Color(0xbcd8ff);
 
       // ---------- Small procedural textures (no external images needed) ----------
-      function canvasTexture(draw, w, h, repeatX, repeatY) {
+      // isColorMap: color/albedo textures need sRGB decoding; data textures
+      // (roughness maps etc.) must stay linear or they render too dark.
+      function canvasTexture(draw, w, h, repeatX, repeatY, isColorMap) {
         var c = document.createElement("canvas");
         c.width = w; c.height = h;
         draw(c.getContext("2d"), w, h);
@@ -284,6 +291,7 @@ function initPv3d(prefersReducedMotion) {
           tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
           tex.repeat.set(repeatX, repeatY);
         }
+        if (isColorMap) tex.encoding = THREE.sRGBEncoding;
         return tex;
       }
 
@@ -301,7 +309,7 @@ function initPv3d(prefersReducedMotion) {
         for (y = 0; y < h; y += 8) {
           ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
         }
-      }, 256, 256, 3, 2);
+      }, 256, 256, 3, 2, true);
 
       var roofTexture = canvasTexture(function (ctx, w, h) {
         ctx.fillStyle = "#1a3350";
@@ -315,7 +323,22 @@ function initPv3d(prefersReducedMotion) {
           ctx.lineWidth = 1;
           ctx.beginPath(); ctx.moveTo(0, y + 2); ctx.lineTo(w, y + 2); ctx.stroke();
         }
-      }, 256, 256, 4, 5);
+      }, 256, 256, 4, 5, true);
+
+      // Roughness *variation* for the roof (a data map, not a color map) so
+      // it doesn't read as one flat, uniform plastic-y surface.
+      var roofRoughnessTexture = canvasTexture(function (ctx, w, h) {
+        ctx.fillStyle = "#999999";
+        ctx.fillRect(0, 0, w, h);
+        var i, gx, gy, s, v;
+        for (i = 0; i < 700; i++) {
+          gx = Math.random() * w; gy = Math.random() * h;
+          s = 2 + Math.random() * 3;
+          v = 110 + Math.floor(Math.random() * 110);
+          ctx.fillStyle = "rgb(" + v + "," + v + "," + v + ")";
+          ctx.fillRect(gx, gy, s, s);
+        }
+      }, 256, 256, 4, 5, false);
 
       var grassTexture = canvasTexture(function (ctx, w, h) {
         ctx.fillStyle = "#d8ecd4";
@@ -326,13 +349,15 @@ function initPv3d(prefersReducedMotion) {
           ctx.fillStyle = Math.random() > 0.5 ? "rgba(90,150,80,0.16)" : "rgba(210,235,200,0.4)";
           ctx.fillRect(gx, gy, 2, 2);
         }
-      }, 256, 256, 5, 5);
+      }, 256, 256, 5, 5, true);
 
-      // ---------- Lighting: warm sun + cool sky fill + soft ambient ----------
-      scene.add(new THREE.HemisphereLight(0xbcd8ff, 0x8a7457, 0.5));
-      scene.add(new THREE.AmbientLight(0xffffff, 0.22));
-      var sunLight = new THREE.DirectionalLight(0xfff1d6, 1.15);
-      sunLight.position.set(6, 8.5, 4);
+      // ---------- Lighting: warm low-angle sun + cool sky/ground fill ----------
+      // Sun is the dominant light (contrast + long shadows); hemisphere +
+      // ambient just keep the shadow side from going fully black.
+      scene.add(new THREE.HemisphereLight(0xbcd8ff, 0x8a7457, 0.3));
+      scene.add(new THREE.AmbientLight(0xffffff, 0.1));
+      var sunLight = new THREE.DirectionalLight(0xfff2df, 0.85);
+      sunLight.position.set(7, 5.5, 3); // ~36° elevation – visible contrast, longer shadows
       sunLight.castShadow = true;
       sunLight.shadow.mapSize.set(1024, 1024);
       sunLight.shadow.camera.left = -4.5;
@@ -363,6 +388,7 @@ function initPv3d(prefersReducedMotion) {
       ground.rotation.x = -90 * DEG;
       ground.position.y = -0.02;
       ground.receiveShadow = true;
+      ground.castShadow = false;
       scene.add(ground);
 
       var shadowCanvas = document.createElement("canvas");
@@ -393,6 +419,7 @@ function initPv3d(prefersReducedMotion) {
         bush.position.set(x, 0.26 * scale, z);
         bush.scale.set(scale, scale * 0.8, scale);
         bush.castShadow = true;
+        bush.receiveShadow = true;
         scene.add(bush);
       }
       addBush(-2.75, 1.85, 1, 0x4c8c3a);
@@ -410,39 +437,47 @@ function initPv3d(prefersReducedMotion) {
       houseGroup.add(walls);
 
       // ---------- Door ----------
-      var doorMat = new THREE.MeshStandardMaterial({ color: 0xe8990a, roughness: 0.55 });
+      var doorMat = new THREE.MeshStandardMaterial({ color: 0xd9720c, roughness: 0.55 });
       var door = new THREE.Mesh(new THREE.BoxGeometry(0.62, 1.3, 0.06), doorMat);
       door.position.set(-1.35, 0.65, 1.63);
       door.castShadow = true;
+      door.receiveShadow = true;
       houseGroup.add(door);
       var doorknob = new THREE.Mesh(
         new THREE.SphereGeometry(0.035, 8, 8),
         new THREE.MeshStandardMaterial({ color: 0xffe08a, roughness: 0.3, metalness: 0.6 })
       );
       doorknob.position.set(-1.15, 0.65, 1.67);
+      doorknob.castShadow = true;
       houseGroup.add(doorknob);
 
-      // ---------- Windows (reflective glass via the cube camera) ----------
+      // ---------- Windows ----------
+      // Note: MeshPhysicalMaterial's `transmission` (true see-through
+      // refraction) was tried here but renders as a solid opaque white pane
+      // at this Three.js revision/renderer setup (tested and confirmed via
+      // local render) instead of glass — so this uses the reflective,
+      // translucent approach instead, which was verified to look correct.
       var winFrameMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.6 });
       var winGlassMat = new THREE.MeshPhysicalMaterial({
-        color: 0x9fc7ea,
-        roughness: 0.08,
-        metalness: 0.1,
-        reflectivity: 0.9,
-        clearcoat: 0.5,
+        color: 0x6fa8d8,
+        roughness: 0.12,
+        metalness: 0.05,
+        reflectivity: 0.4,
+        clearcoat: 0.3,
         clearcoatRoughness: 0.15,
         envMap: cubeRenderTarget.texture,
-        envMapIntensity: 1.3,
+        envMapIntensity: 0.6,
         transparent: true,
-        opacity: 0.82
+        opacity: 0.8
       });
 
       function addWindow(x, y, z, rotY) {
-        // The frame sits flush on the wall; the glass (and mullion bars)
-        // are pushed outward along the window's own facing direction via
-        // translateZ, so they sit in front of the frame instead of being
-        // buried inside its solid geometry (which made them invisible).
-        var frame = new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.6, 0.05), winFrameMat);
+        // The frame sits flush on the wall with real depth; the glass (and
+        // mullion bars) are pushed outward along the window's own facing
+        // direction via translateZ, so they sit in front of the frame
+        // instead of being buried inside its solid geometry (which made
+        // them invisible in an earlier version).
+        var frame = new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.6, 0.09), winFrameMat);
         var glass = new THREE.Mesh(new THREE.BoxGeometry(0.46, 0.46, 0.03), winGlassMat);
         var vBar = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.46, 0.05), winFrameMat);
         var hBar = new THREE.Mesh(new THREE.BoxGeometry(0.46, 0.04, 0.05), winFrameMat);
@@ -451,11 +486,12 @@ function initPv3d(prefersReducedMotion) {
           mesh.position.set(x, y, z);
           if (rotY) mesh.rotation.y = rotY;
         });
-        glass.translateZ(0.045);
-        vBar.translateZ(0.047);
-        hBar.translateZ(0.047);
+        glass.translateZ(0.065);
+        vBar.translateZ(0.067);
+        hBar.translateZ(0.067);
 
         frame.castShadow = true;
+        frame.receiveShadow = true;
         vBar.castShadow = true;
         hBar.castShadow = true;
 
@@ -472,8 +508,16 @@ function initPv3d(prefersReducedMotion) {
       addWindow(0.6, 1.3, -1.63, 180 * DEG);
 
       // ---------- Roof ----------
-      var roofMat = new THREE.MeshStandardMaterial({ map: roofTexture, roughness: 0.6, metalness: 0.08 });
-      var roofGeo = new THREE.BoxGeometry(2.9, 0.12, 3.7);
+      // roughnessMap adds local variation so the roof doesn't read as one
+      // flat, uniform plastic-y slab; depth (3.95 vs the 3.2-deep walls)
+      // gives a clearly visible overhang at the gable ends.
+      var roofMat = new THREE.MeshStandardMaterial({
+        map: roofTexture,
+        roughnessMap: roofRoughnessTexture,
+        roughness: 0.55,
+        metalness: 0.06
+      });
+      var roofGeo = new THREE.BoxGeometry(2.9, 0.12, 3.95);
 
       var roofLeft = new THREE.Mesh(roofGeo, roofMat);
       roofLeft.position.set(-1.28, 2.55, 0);
@@ -490,17 +534,21 @@ function initPv3d(prefersReducedMotion) {
       houseGroup.add(roofRight);
 
       var ridge = new THREE.Mesh(
-        new THREE.BoxGeometry(0.14, 0.14, 3.72),
+        new THREE.BoxGeometry(0.14, 0.14, 3.97),
         new THREE.MeshStandardMaterial({ color: 0x0e2036, roughness: 0.6 })
       );
       ridge.position.set(0, 2.99, 0);
+      ridge.castShadow = true;
+      ridge.receiveShadow = true;
       houseGroup.add(ridge);
 
       // Eave fascia trim along the lower edge of each roof slope
       var trimMat = new THREE.MeshStandardMaterial({ color: 0xeef3f9, roughness: 0.7 });
       function addFascia(slope, localX) {
-        var fascia = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.1, 3.74), trimMat);
+        var fascia = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.1, 3.99), trimMat);
         fascia.position.set(localX, -0.02, 0);
+        fascia.castShadow = true;
+        fascia.receiveShadow = true;
         slope.add(fascia);
       }
       addFascia(roofLeft, -1.47);
@@ -511,24 +559,27 @@ function initPv3d(prefersReducedMotion) {
       var chimney = new THREE.Mesh(new THREE.BoxGeometry(0.28, 0.7, 0.28), chimneyMat);
       chimney.position.set(-1.55, 2.75, -0.6);
       chimney.castShadow = true;
+      chimney.receiveShadow = true;
       houseGroup.add(chimney);
       var chimneyCap = new THREE.Mesh(
         new THREE.BoxGeometry(0.36, 0.06, 0.36),
         new THREE.MeshStandardMaterial({ color: 0x5c3a2c, roughness: 0.7 })
       );
       chimneyCap.position.set(-1.55, 3.11, -0.6);
+      chimneyCap.castShadow = true;
+      chimneyCap.receiveShadow = true;
       houseGroup.add(chimneyCap);
 
       // ---------- Solar panels: 2 rows x 3 cols with a visible cell grid ----------
       var panelMat = new THREE.MeshPhysicalMaterial({
         color: 0x101f34,
-        roughness: 0.32,
-        metalness: 0.25,
-        reflectivity: 0.6,
-        clearcoat: 0.35,
-        clearcoatRoughness: 0.2,
+        roughness: 0.22,
+        metalness: 0.18,
+        reflectivity: 0.7,
+        clearcoat: 1,
+        clearcoatRoughness: 0.08,
         envMap: cubeRenderTarget.texture,
-        envMapIntensity: 0.8
+        envMapIntensity: 1
       });
       var panelFrameMat = new THREE.MeshStandardMaterial({ color: 0xd7dee5, roughness: 0.4, metalness: 0.5 });
       var gridLineMat = new THREE.LineBasicMaterial({ color: 0x3a5f8a });
@@ -568,7 +619,9 @@ function initPv3d(prefersReducedMotion) {
           frame.position.set(localX, 0.045, localZ);
           panel.position.set(localX, 0.07, localZ);
           frame.castShadow = true;
+          frame.receiveShadow = true;
           panel.castShadow = true;
+          panel.receiveShadow = true;
           roofRight.add(frame);
           roofRight.add(panel);
 
@@ -580,12 +633,12 @@ function initPv3d(prefersReducedMotion) {
 
       scene.add(houseGroup);
 
-      // ---------- Sun accent ----------
+      // ---------- Sun accent (placed along the same direction as sunLight) ----------
       var sunMesh = new THREE.Mesh(
         new THREE.SphereGeometry(0.42, 20, 20),
         new THREE.MeshBasicMaterial({ color: 0xffc94a })
       );
-      sunMesh.position.set(5.4, 5.8, -3.4);
+      sunMesh.position.set(9.1, 7.1, 3.9);
       scene.add(sunMesh);
       var sunGlow = new THREE.Mesh(
         new THREE.SphereGeometry(0.62, 16, 16),
