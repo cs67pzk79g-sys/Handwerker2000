@@ -32,3 +32,8 @@ Zwei Hinweise für den echten Go-Live:
   einer DSGVO-konformen Cookie-Einwilligung aktivieren).
 - **og:url / og:image** nutzen die fiktive Demo-Domain `sonnenwerk-solar.de` –
   vor dem Launch durch die echte Domain ersetzen.
+
+## Hosting
+
+Seit August 2026 läuft das Hosting über Netlify (`netlify.toml`, `publish = "test"`)
+statt über GitHub Pages.
