@@ -257,137 +257,271 @@ function initPv3d(prefersReducedMotion) {
     } catch (e) {
       return;
     }
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-    renderer.setSize(width, height);
 
-    var scene = new THREE.Scene();
-    var camera = new THREE.PerspectiveCamera(38, width / height, 0.1, 100);
-    camera.position.set(5.6, 4.1, 7.2);
+    // Everything below is wrapped so that any unexpected error (e.g. an
+    // API mismatch) leaves the SVG fallback visible instead of a broken
+    // or blank canvas.
+    try {
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+      renderer.setSize(width, height);
 
-    scene.add(new THREE.AmbientLight(0xffffff, 0.7));
-    var sunLight = new THREE.DirectionalLight(0xfff3d6, 0.85);
-    sunLight.position.set(6, 8, 4);
-    scene.add(sunLight);
-    scene.add(new THREE.HemisphereLight(0xbfd7ff, 0x223344, 0.35));
+      var scene = new THREE.Scene();
+      var camera = new THREE.PerspectiveCamera(38, width / height, 0.1, 100);
+      camera.position.set(5.9, 3.9, 7.6);
 
-    var houseGroup = new THREE.Group();
+      var DEG = Math.PI / 180;
 
-    var wallMat = new THREE.MeshLambertMaterial({ color: 0x173c60 });
-    var walls = new THREE.Mesh(new THREE.BoxGeometry(4.6, 2.2, 3.2), wallMat);
-    walls.position.y = 1.1;
-    houseGroup.add(walls);
+      // ---------- Lighting: warm sun + cool sky fill + soft ambient ----------
+      scene.add(new THREE.HemisphereLight(0xbcd8ff, 0x8a7457, 0.55));
+      scene.add(new THREE.AmbientLight(0xffffff, 0.28));
+      var sunLight = new THREE.DirectionalLight(0xfff1d6, 1.05);
+      sunLight.position.set(6, 8.5, 4);
+      scene.add(sunLight);
 
-    var roofMat = new THREE.MeshLambertMaterial({ color: 0x0b2438 });
-    var roofGeo = new THREE.BoxGeometry(2.9, 0.12, 3.6);
-    var DEG = Math.PI / 180;
+      // ---------- Ground: grass disc + soft contact shadow ----------
+      var groundMat = new THREE.MeshStandardMaterial({ color: 0xdcecd9, roughness: 1, metalness: 0 });
+      var ground = new THREE.Mesh(new THREE.CircleGeometry(6.2, 32), groundMat);
+      ground.rotation.x = -90 * DEG;
+      ground.position.y = -0.02;
+      scene.add(ground);
 
-    var roofLeft = new THREE.Mesh(roofGeo, roofMat);
-    roofLeft.position.set(-1.28, 2.55, 0);
-    roofLeft.rotation.z = 24 * DEG;
-    houseGroup.add(roofLeft);
+      var shadowCanvas = document.createElement("canvas");
+      shadowCanvas.width = 128;
+      shadowCanvas.height = 128;
+      var shadowCtx = shadowCanvas.getContext("2d");
+      var grad = shadowCtx.createRadialGradient(64, 64, 0, 64, 64, 64);
+      grad.addColorStop(0, "rgba(10,20,35,0.38)");
+      grad.addColorStop(1, "rgba(10,20,35,0)");
+      shadowCtx.fillStyle = grad;
+      shadowCtx.fillRect(0, 0, 128, 128);
+      var shadowMat = new THREE.MeshBasicMaterial({
+        map: new THREE.CanvasTexture(shadowCanvas),
+        transparent: true,
+        depthWrite: false
+      });
+      var shadowBlob = new THREE.Mesh(new THREE.PlaneGeometry(6.6, 5.4), shadowMat);
+      shadowBlob.rotation.x = -90 * DEG;
+      shadowBlob.position.set(0.3, 0, 0.15);
+      scene.add(shadowBlob);
 
-    var roofRight = new THREE.Mesh(roofGeo, roofMat);
-    roofRight.position.set(1.28, 2.55, 0);
-    roofRight.rotation.z = -24 * DEG;
-    houseGroup.add(roofRight);
-
-    var ridge = new THREE.Mesh(
-      new THREE.BoxGeometry(0.12, 0.12, 3.6),
-      roofMat
-    );
-    ridge.position.set(0, 2.98, 0);
-    houseGroup.add(ridge);
-
-    // Solar panels: 2 rows x 3 cols on the right roof slope
-    var panelMat = new THREE.MeshPhongMaterial({ color: 0x2f80ed, shininess: 70, specular: 0x9fc4ff });
-    var frameMat = new THREE.MeshLambertMaterial({ color: 0x0f2942 });
-    var panelGeo = new THREE.BoxGeometry(0.78, 0.04, 0.56);
-    var frameGeo = new THREE.BoxGeometry(0.84, 0.03, 0.6);
-
-    var cols = 3, rows = 2;
-    var startX = -0.86, stepX = 0.86;
-    var startZ = -0.62, stepZ = 0.64;
-
-    for (var r = 0; r < rows; r++) {
-      for (var c = 0; c < cols; c++) {
-        var localX = startX + c * stepX;
-        var localZ = startZ + r * stepZ;
-        var frame = new THREE.Mesh(frameGeo, frameMat);
-        var panel = new THREE.Mesh(panelGeo, panelMat);
-        frame.position.set(localX, 0.05, localZ);
-        panel.position.set(localX, 0.075, localZ);
-        roofRight.add(frame);
-        roofRight.add(panel);
+      // ---------- Bushes ----------
+      function addBush(x, z, scale, colorHex) {
+        var bush = new THREE.Mesh(
+          new THREE.SphereGeometry(0.42, 8, 6),
+          new THREE.MeshStandardMaterial({ color: colorHex, roughness: 0.9 })
+        );
+        bush.position.set(x, 0.26 * scale, z);
+        bush.scale.set(scale, scale * 0.8, scale);
+        scene.add(bush);
       }
-    }
+      addBush(-2.75, 1.85, 1, 0x4c8c3a);
+      addBush(-2.3, 2.1, 0.7, 0x6ba852);
+      addBush(2.65, 1.8, 0.85, 0x5da34a);
 
-    scene.add(houseGroup);
+      var houseGroup = new THREE.Group();
 
-    var sunMesh = new THREE.Mesh(
-      new THREE.SphereGeometry(0.42, 20, 20),
-      new THREE.MeshBasicMaterial({ color: 0xffc94a })
-    );
-    sunMesh.position.set(5.2, 5.6, -3.2);
-    scene.add(sunMesh);
+      // ---------- Walls ----------
+      var wallMat = new THREE.MeshStandardMaterial({ color: 0xf2ead9, roughness: 0.9, metalness: 0 });
+      var walls = new THREE.Mesh(new THREE.BoxGeometry(4.6, 2.2, 3.2), wallMat);
+      walls.position.y = 1.1;
+      houseGroup.add(walls);
 
-    var controls = new THREE.OrbitControls(camera, renderer.domElement);
-    controls.target.set(0, 1.5, 0);
-    controls.enableDamping = true;
-    controls.dampingFactor = 0.08;
-    controls.enablePan = false;
-    controls.enableZoom = false;
-    controls.minPolarAngle = 45 * DEG;
-    controls.maxPolarAngle = 85 * DEG;
-    controls.autoRotate = !prefersReducedMotion;
-    controls.autoRotateSpeed = 1.1;
-    controls.update();
+      // ---------- Door ----------
+      var doorMat = new THREE.MeshStandardMaterial({ color: 0xe8990a, roughness: 0.55 });
+      var door = new THREE.Mesh(new THREE.BoxGeometry(0.62, 1.3, 0.06), doorMat);
+      door.position.set(-1.35, 0.65, 1.63);
+      houseGroup.add(door);
+      var doorknob = new THREE.Mesh(
+        new THREE.SphereGeometry(0.035, 8, 8),
+        new THREE.MeshStandardMaterial({ color: 0xffe08a, roughness: 0.3, metalness: 0.6 })
+      );
+      doorknob.position.set(-1.15, 0.65, 1.67);
+      houseGroup.add(doorknob);
 
-    var idleTimer = null;
+      // ---------- Windows ----------
+      var winFrameMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.6 });
+      var winGlassMat = new THREE.MeshStandardMaterial({
+        color: 0xbfe0ff, roughness: 0.15, metalness: 0.1, transparent: true, opacity: 0.88
+      });
 
-    function pauseAutoRotate() {
-      controls.autoRotate = false;
-      if (hint) hint.classList.add("is-hidden");
-      clearTimeout(idleTimer);
-      if (!prefersReducedMotion) {
-        idleTimer = setTimeout(function () {
-          controls.autoRotate = true;
-        }, 3500);
+      function addWindow(x, y, z, rotY) {
+        var frame = new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.6, 0.06), winFrameMat);
+        var glass = new THREE.Mesh(new THREE.BoxGeometry(0.48, 0.48, 0.03), winGlassMat);
+        var vBar = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.48, 0.05), winFrameMat);
+        var hBar = new THREE.Mesh(new THREE.BoxGeometry(0.48, 0.04, 0.05), winFrameMat);
+        [frame, glass, vBar, hBar].forEach(function (mesh) {
+          mesh.position.set(x, y, z);
+          if (rotY) mesh.rotation.y = rotY;
+        });
+        houseGroup.add(frame);
+        houseGroup.add(glass);
+        houseGroup.add(vBar);
+        houseGroup.add(hBar);
       }
-    }
+      addWindow(0.55, 1.3, 1.63, 0);
+      addWindow(1.55, 1.3, 1.63, 0);
+      addWindow(2.3, 1.3, 0, 90 * DEG);
+      addWindow(-2.3, 1.3, 0.5, 90 * DEG);
+      addWindow(-0.6, 1.3, -1.63, 0);
+      addWindow(0.6, 1.3, -1.63, 0);
 
-    canvas.addEventListener("pointerdown", pauseAutoRotate);
+      // ---------- Roof ----------
+      var roofMat = new THREE.MeshStandardMaterial({ color: 0x1a3350, roughness: 0.65, metalness: 0.05 });
+      var roofGeo = new THREE.BoxGeometry(2.9, 0.12, 3.7);
 
-    function onResize() {
-      var w = stage.clientWidth;
-      var h = stage.clientHeight;
-      if (!w || !h) return;
-      camera.aspect = w / h;
-      camera.updateProjectionMatrix();
-      renderer.setSize(w, h);
-    }
+      var roofLeft = new THREE.Mesh(roofGeo, roofMat);
+      roofLeft.position.set(-1.28, 2.55, 0);
+      roofLeft.rotation.z = 24 * DEG;
+      houseGroup.add(roofLeft);
 
-    if ("ResizeObserver" in window) {
-      new ResizeObserver(onResize).observe(stage);
-    } else {
-      window.addEventListener("resize", onResize);
-    }
+      var roofRight = new THREE.Mesh(roofGeo, roofMat);
+      roofRight.position.set(1.28, 2.55, 0);
+      roofRight.rotation.z = -24 * DEG;
+      houseGroup.add(roofRight);
 
-    var isVisible = true;
-    if ("IntersectionObserver" in window) {
-      new IntersectionObserver(function (entries) {
-        isVisible = entries[0].isIntersecting;
-      }, { threshold: 0.05 }).observe(stage);
-    }
+      var ridge = new THREE.Mesh(
+        new THREE.BoxGeometry(0.14, 0.14, 3.72),
+        new THREE.MeshStandardMaterial({ color: 0x0e2036, roughness: 0.6 })
+      );
+      ridge.position.set(0, 2.99, 0);
+      houseGroup.add(ridge);
 
-    function animate() {
-      requestAnimationFrame(animate);
-      if (!isVisible) return;
+      // Eave fascia trim along the lower edge of each roof slope
+      var trimMat = new THREE.MeshStandardMaterial({ color: 0xeef3f9, roughness: 0.7 });
+      function addFascia(slope, localX) {
+        var fascia = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.1, 3.74), trimMat);
+        fascia.position.set(localX, -0.02, 0);
+        slope.add(fascia);
+      }
+      addFascia(roofLeft, -1.47);
+      addFascia(roofRight, 1.47);
+
+      // ---------- Solar panels: 2 rows x 3 cols with a visible cell grid ----------
+      var panelMat = new THREE.MeshStandardMaterial({ color: 0x14243a, roughness: 0.5, metalness: 0.2 });
+      var panelFrameMat = new THREE.MeshStandardMaterial({ color: 0xd7dee5, roughness: 0.4, metalness: 0.5 });
+      var gridLineMat = new THREE.LineBasicMaterial({ color: 0x3a5f8a });
+
+      var panelW = 0.78, panelD = 0.56;
+      var panelGeo = new THREE.BoxGeometry(panelW, 0.04, panelD);
+      var panelFrameGeo = new THREE.BoxGeometry(panelW + 0.06, 0.03, panelD + 0.05);
+
+      function createCellGrid(w, d, cols, rows, y) {
+        var pts = [];
+        var halfW = w / 2, halfD = d / 2;
+        var ci, ri, gx, gz;
+        for (ci = 1; ci < cols; ci++) {
+          gx = -halfW + (w / cols) * ci;
+          pts.push(gx, y, -halfD, gx, y, halfD);
+        }
+        for (ri = 1; ri < rows; ri++) {
+          gz = -halfD + (d / rows) * ri;
+          pts.push(-halfW, y, gz, halfW, y, gz);
+        }
+        var geo = new THREE.BufferGeometry();
+        geo.setAttribute("position", new THREE.Float32BufferAttribute(pts, 3));
+        return new THREE.LineSegments(geo, gridLineMat);
+      }
+
+      var cols = 3, rows = 2;
+      var startX = -0.86, stepX = 0.86;
+      var startZ = -0.62, stepZ = 0.64;
+      var r, c, localX, localZ, frame, panel, grid;
+
+      for (r = 0; r < rows; r++) {
+        for (c = 0; c < cols; c++) {
+          localX = startX + c * stepX;
+          localZ = startZ + r * stepZ;
+          frame = new THREE.Mesh(panelFrameGeo, panelFrameMat);
+          panel = new THREE.Mesh(panelGeo, panelMat);
+          frame.position.set(localX, 0.045, localZ);
+          panel.position.set(localX, 0.07, localZ);
+          roofRight.add(frame);
+          roofRight.add(panel);
+
+          grid = createCellGrid(panelW, panelD, 3, 2, 0.093);
+          grid.position.set(localX, 0, localZ);
+          roofRight.add(grid);
+        }
+      }
+
+      scene.add(houseGroup);
+
+      // ---------- Sun accent ----------
+      var sunMesh = new THREE.Mesh(
+        new THREE.SphereGeometry(0.42, 20, 20),
+        new THREE.MeshBasicMaterial({ color: 0xffc94a })
+      );
+      sunMesh.position.set(5.4, 5.8, -3.4);
+      scene.add(sunMesh);
+      var sunGlow = new THREE.Mesh(
+        new THREE.SphereGeometry(0.62, 16, 16),
+        new THREE.MeshBasicMaterial({ color: 0xffe9b0, transparent: true, opacity: 0.25 })
+      );
+      sunGlow.position.copy(sunMesh.position);
+      scene.add(sunGlow);
+
+      // ---------- Controls ----------
+      var controls = new THREE.OrbitControls(camera, renderer.domElement);
+      controls.target.set(0, 1.4, 0);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.08;
+      controls.enablePan = false;
+      controls.enableZoom = false;
+      controls.minPolarAngle = 40 * DEG;
+      controls.maxPolarAngle = 85 * DEG;
+      controls.autoRotate = !prefersReducedMotion;
+      controls.autoRotateSpeed = 1.1;
       controls.update();
-      renderer.render(scene, camera);
-    }
-    animate();
 
-    if (fallback) fallback.classList.add("is-hidden");
+      var idleTimer = null;
+
+      function pauseAutoRotate() {
+        controls.autoRotate = false;
+        if (hint) hint.classList.add("is-hidden");
+        clearTimeout(idleTimer);
+        if (!prefersReducedMotion) {
+          idleTimer = setTimeout(function () {
+            controls.autoRotate = true;
+          }, 3500);
+        }
+      }
+
+      canvas.addEventListener("pointerdown", pauseAutoRotate);
+
+      function onResize() {
+        var w = stage.clientWidth;
+        var h = stage.clientHeight;
+        if (!w || !h) return;
+        camera.aspect = w / h;
+        camera.updateProjectionMatrix();
+        renderer.setSize(w, h);
+      }
+
+      if ("ResizeObserver" in window) {
+        new ResizeObserver(onResize).observe(stage);
+      } else {
+        window.addEventListener("resize", onResize);
+      }
+
+      var isVisible = true;
+      if ("IntersectionObserver" in window) {
+        new IntersectionObserver(function (entries) {
+          isVisible = entries[0].isIntersecting;
+        }, { threshold: 0.05 }).observe(stage);
+      }
+
+      function animate() {
+        requestAnimationFrame(animate);
+        if (!isVisible) return;
+        controls.update();
+        renderer.render(scene, camera);
+      }
+      animate();
+
+      if (fallback) fallback.classList.add("is-hidden");
+    } catch (e) {
+      // Something in the scene build failed – keep the SVG fallback visible.
+    }
   }
 
   if ("IntersectionObserver" in window) {
