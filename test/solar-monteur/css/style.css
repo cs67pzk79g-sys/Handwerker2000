@@ -660,7 +660,7 @@ a.service-card { display: block; }
   margin: 24px 0;
 }
 
-.response-badge .response-icon { font-size: 1.5rem; line-height: 1; }
+.response-badge .response-icon { display: flex; flex-shrink: 0; }
 .response-badge strong { display: block; color: var(--color-primary); font-size: 0.98rem; }
 .response-badge span { font-size: 0.88rem; color: var(--color-text-muted); }
 
