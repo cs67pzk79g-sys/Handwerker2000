@@ -114,7 +114,40 @@ input:not([type="range"]):focus-visible {
   height: 76px;
 }
 
-.logo { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  flex-shrink: 0;
+  text-decoration: none;
+}
+
+.brand-mark { display: block; flex-shrink: 0; }
+
+.brand-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  white-space: nowrap;
+}
+
+.brand-name {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 1.14rem;
+  letter-spacing: -0.005em;
+  color: #14395E;
+  line-height: 1;
+}
+
+.brand-sub {
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #7a8b9c;
+  line-height: 1;
+}
 
 .logo-text { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
@@ -564,8 +597,29 @@ input:not([type="range"]):focus-visible {
   white-space: nowrap;
 }
 
-.hero .btn-ghost { border-color: rgba(255, 255, 255, 0.38); color: #fff; }
-.hero .btn-ghost:hover { border-color: #fff; color: #fff; }
+/* Sekundäre Aktion: Textlink statt zweitem Button */
+.hero-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #c9d8ea;
+  font-weight: 500;
+  font-size: 0.95rem;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(201, 216, 234, 0.4);
+  padding-bottom: 3px;
+  transition: color 0.18s ease, border-color 0.18s ease;
+}
+.hero-link span { color: #8ab6f5; }
+.hero-link:hover { color: #fff; border-color: rgba(255, 255, 255, 0.75); }
+
+/* Primär-Button im Hero: gedämpftes Amber */
+.hero .btn-primary {
+  background: #e5a63a;
+  color: #14304a;
+  font-size: 0.98rem;
+}
+.hero .btn-primary:hover { background: #d9982c; }
 
 /* Statistik-Leiste sitzt am Fuss des Hero */
 .hero .stat-bar {
@@ -1395,7 +1449,15 @@ a.service-card { display: block; }
   .hero h1 { font-size: 2.1rem; line-height: 1.16; }
   .hero-sub { font-size: 1rem; margin-bottom: 24px; }
 
-  .hero-actions { flex-direction: column; gap: 12px; }
-  .hero-actions .btn { justify-content: center; width: 100%; }
+  /* Buttons NICHT auf volle Breite — bleiben dezent, linksbündig */
+  .hero-actions { flex-direction: column; align-items: flex-start; gap: 18px; }
+  .hero .btn-primary { padding: 13px 22px; font-size: 0.92rem; width: auto; }
   .hero-trust { font-size: 0.86rem; }
+}
+
+@media (max-width: 860px) {
+  .brand-mark { width: 30px; height: 30px; }
+  .brand-name { font-size: 1.02rem; }
+  .brand-sub { font-size: 0.58rem; }
+  .brand { gap: 11px; }
 }
