@@ -1,2 +1,4 @@
 User-agent: *
 Allow: /
+
+Sitemap: https://sonnenwerksolartechnick.netlify.app/solar-monteur/sitemap.xml
