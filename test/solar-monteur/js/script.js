@@ -184,8 +184,16 @@
 
   updateCalculator();
 
-  // ---------- Kontaktformular (Demo, kein Backend) ----------
+  // ---------- Kontaktformular (Netlify Forms) ----------
   var form = document.getElementById("kontaktForm");
+
+  function encodeFormData(data) {
+    return Object.keys(data)
+      .map(function (key) {
+        return encodeURIComponent(key) + "=" + encodeURIComponent(data[key]);
+      })
+      .join("&");
+  }
 
   if (form) {
     form.addEventListener("submit", function (event) {
@@ -196,7 +204,23 @@
         return;
       }
 
-      window.location.href = "danke.html";
+      var submitButton = form.querySelector("button[type=submit]");
+      if (submitButton) submitButton.disabled = true;
+
+      var formData = Object.fromEntries(new FormData(form).entries());
+
+      fetch("/", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: encodeFormData(formData),
+      })
+        .then(function () {
+          window.location.href = "danke.html";
+        })
+        .catch(function () {
+          if (submitButton) submitButton.disabled = false;
+          alert("Beim Senden ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut oder rufen Sie uns direkt an.");
+        });
     });
   }
 

@@ -23,6 +23,8 @@
 <meta name="twitter:image" content="https://sonnenwerksolartechnick.netlify.app/solar-monteur/img/og-image.png">
 
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22><rect width=%2264%22 height=%2264%22 rx=%2214%22 fill=%22%2314395E%22/><circle cx=%2232%22 cy=%2232%22 r=%2213%22 fill=%22%23FFC53D%22/><g fill=%22%23FFC53D%22><rect x=%2229.75%22 y=%222.5%22 width=%224.5%22 height=%2210%22 rx=%222.25%22/><rect x=%2229.75%22 y=%222.5%22 width=%224.5%22 height=%2210%22 rx=%222.25%22 transform=%22rotate(45 32 32)%22/><rect x=%2229.75%22 y=%222.5%22 width=%224.5%22 height=%2210%22 rx=%222.25%22 transform=%22rotate(90 32 32)%22/><rect x=%2229.75%22 y=%222.5%22 width=%224.5%22 height=%2210%22 rx=%222.25%22 transform=%22rotate(135 32 32)%22/><rect x=%2229.75%22 y=%222.5%22 width=%224.5%22 height=%2210%22 rx=%222.25%22 transform=%22rotate(180 32 32)%22/><rect x=%2229.75%22 y=%222.5%22 width=%224.5%22 height=%2210%22 rx=%222.25%22 transform=%22rotate(225 32 32)%22/><rect x=%2229.75%22 y=%222.5%22 width=%224.5%22 height=%2210%22 rx=%222.25%22 transform=%22rotate(270 32 32)%22/><rect x=%2229.75%22 y=%222.5%22 width=%224.5%22 height=%2210%22 rx=%222.25%22 transform=%22rotate(315 32 32)%22/></g></svg>">
+<link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+<link rel="manifest" href="manifest.json">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -139,6 +141,8 @@
 -->
 </head>
 <body>
+
+<a href="#top" class="skip-link">Zum Inhalt springen</a>
 
 <div class="announce-bar">
   ☀️ Demo-Vorzeigeseite &mdash; fiktiver Musterbetrieb für Photovoltaik-Handwerksbetriebe
@@ -658,7 +662,9 @@
         </div>
       </div>
 
-      <form class="kontakt-form reveal" id="kontaktForm" novalidate>
+      <form class="kontakt-form reveal" id="kontaktForm" name="kontakt" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" novalidate>
+        <input type="hidden" name="form-name" value="kontakt">
+        <p class="hp-field" aria-hidden="true"><label>Nicht ausfüllen: <input name="bot-field" tabindex="-1" autocomplete="off"></label></p>
         <div class="field">
           <label for="name">Name *</label>
           <input type="text" id="name" name="name" required>
@@ -692,7 +698,7 @@
           <label for="datenschutz">Ich habe die <a href="datenschutz.html" target="_blank" rel="noopener">Datenschutzhinweise</a> zur Kenntnis genommen. *</label>
         </div>
         <button type="submit" class="btn btn-primary btn-lg btn-block">Unverbindlich anfragen</button>
-        <p class="form-note">Demo-Formular &ndash; es werden keine Daten versendet oder gespeichert.</p>
+        <p class="form-note">Ihre Angaben werden über Netlify Forms übermittelt. Bitte keine echten personenbezogenen Daten eintragen &ndash; dies ist eine Demo-Seite.</p>
       </form>
 
     </div>
