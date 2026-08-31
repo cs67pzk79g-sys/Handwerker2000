@@ -3,3 +3,10 @@
   # Skip deploy-preview builds (one per PR) to save build minutes.
   # Exit 0 = skip, exit 1 = build. Production/branch deploys still run.
   ignore = "if [ \"$CONTEXT\" = \"deploy-preview\" ]; then exit 0; else exit 1; fi"
+
+# Serve the branded solar-monteur 404 page for unmatched paths under that
+# project, instead of falling back to the site-wide generic 404.html.
+[[redirects]]
+  from = "/solar-monteur/*"
+  to = "/solar-monteur/404.html"
+  status = 404
