@@ -138,6 +138,15 @@
     });
   }
 
+  // Keeps the custom filled track in sync 1:1 with the thumb, every input event.
+  function updateRangeFill(input) {
+    if (!input || !input.parentElement) return;
+    var min = Number(input.min) || 0;
+    var max = Number(input.max) || 100;
+    var fraction = (Number(input.value) - min) / (max - min);
+    input.parentElement.style.setProperty("--val", fraction);
+  }
+
   function updateCalculator() {
     if (!roofArea || !consumption || !price) return;
 
@@ -148,6 +157,10 @@
     roofAreaOut.textContent = formatNumber(area) + " m²";
     consumptionOut.textContent = formatNumber(yearlyConsumption) + " kWh";
     priceOut.textContent = Number(price.value) + " ct";
+
+    updateRangeFill(roofArea);
+    updateRangeFill(consumption);
+    updateRangeFill(price);
 
     var kwp = Math.min(area / M2_PER_KWP, yearlyConsumption / YIELD_PER_KWP * 1.6);
     kwp = Math.max(kwp, 1);

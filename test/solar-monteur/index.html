@@ -301,34 +301,61 @@
       <div class="calculator reveal">
         <div class="calc-inputs">
           <div class="field">
-            <label for="roofArea">Verfügbare Dachfläche (m²)</label>
-            <input type="range" id="roofArea" min="10" max="200" value="60" step="5">
-            <output for="roofArea" id="roofAreaOut">60 m²</output>
+            <div class="field-head">
+              <label for="roofArea">Verfügbare Dachfläche</label>
+              <output for="roofArea" id="roofAreaOut" class="field-value">60 m²</output>
+            </div>
+            <div class="range-wrap">
+              <input type="range" id="roofArea" min="10" max="200" value="60" step="5">
+            </div>
           </div>
           <div class="field">
-            <label for="consumption">Jährlicher Stromverbrauch (kWh)</label>
-            <input type="range" id="consumption" min="1500" max="10000" value="4000" step="250">
-            <output for="consumption" id="consumptionOut">4.000 kWh</output>
+            <div class="field-head">
+              <label for="consumption">Jährlicher Stromverbrauch</label>
+              <output for="consumption" id="consumptionOut" class="field-value">4.000 kWh</output>
+            </div>
+            <div class="range-wrap">
+              <input type="range" id="consumption" min="1500" max="10000" value="4000" step="250">
+            </div>
           </div>
           <div class="field">
-            <label for="price">Aktueller Strompreis (ct/kWh)</label>
-            <input type="range" id="price" min="25" max="45" value="32" step="1">
-            <output for="price" id="priceOut">32 ct</output>
+            <div class="field-head">
+              <label for="price">Aktueller Strompreis</label>
+              <output for="price" id="priceOut" class="field-value">32 ct</output>
+            </div>
+            <div class="range-wrap">
+              <input type="range" id="price" min="25" max="45" value="32" step="1">
+            </div>
           </div>
         </div>
 
         <div class="calc-results">
           <div class="result-card">
-            <span class="result-label">Empfohlene Anlagengröße</span>
-            <span class="result-value" id="outKwp">–</span>
+            <div class="result-icon" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="3" y="6" width="18" height="12" rx="1.5" stroke="#2f80ed" stroke-width="2"/><path d="M3 10.3h18M3 14.7h18M9 6v12M15 6v12" stroke="#2f80ed" stroke-width="2" stroke-linecap="round"/></svg>
+            </div>
+            <div>
+              <span class="result-label">Empfohlene Anlagengröße</span>
+              <span class="result-value" id="outKwp">–</span>
+            </div>
           </div>
           <div class="result-card">
-            <span class="result-label">Geschätzte Ersparnis / Jahr</span>
-            <span class="result-value" id="outSavings">–</span>
+            <div class="result-icon" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#2f80ed" stroke-width="2"/><path d="M15 8.6c-.8-.9-1.9-1.5-3.2-1.5-2.3 0-4.2 2.2-4.2 4.9s1.9 4.9 4.2 4.9c1.3 0 2.4-.6 3.2-1.5" stroke="#2f80ed" stroke-width="1.7" stroke-linecap="round"/><path d="M6.8 10.6h5.4M6.8 13.2h4.7" stroke="#2f80ed" stroke-width="1.7" stroke-linecap="round"/></svg>
+            </div>
+            <div>
+              <span class="result-label">Geschätzte Ersparnis / Jahr</span>
+              <span class="result-value" id="outSavings">–</span>
+            </div>
           </div>
           <div class="result-card">
-            <span class="result-label">Ungefähre Amortisationszeit</span>
-            <span class="result-value" id="outPayback">–</span>
+            <div class="result-icon" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8.3" stroke="#2f80ed" stroke-width="2"/><path d="M12 7.3v5l3.3 2" stroke="#2f80ed" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div>
+              <span class="result-label">Ungefähre Amortisationszeit</span>
+              <span class="result-value" id="outPayback">–</span>
+            </div>
           </div>
           <p class="calc-disclaimer">
             * Beispielrechnung auf Basis grober Richtwerte (ca. 950 kWh Ertrag pro kWp/Jahr,
