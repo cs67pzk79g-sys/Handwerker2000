@@ -1,8 +1,8 @@
 :root {
   --color-primary: #0f2942;
   --color-primary-dark: #0b1e30;
-  --color-accent: #ffb020;
-  --color-accent-dark: #e8990a;
+  --color-accent: #d9a03c;
+  --color-accent-dark: #b8862e;
   --color-blue: #2f80ed;
   --color-bg: #ffffff;
   --color-bg-alt: #f4f7fb;
@@ -227,7 +227,7 @@ input:not([type="range"]):focus-visible {
 .btn-primary:hover {
   background: var(--color-accent-dark);
   transform: translateY(-1px);
-  box-shadow: 0 8px 18px rgba(255, 176, 32, 0.35);
+  box-shadow: 0 8px 18px rgba(217, 160, 60, 0.35);
 }
 
 .btn-ghost {
@@ -922,11 +922,11 @@ a.service-card { display: block; }
   background-size: contain;
 }
 
-.ref-photo-2 { background: linear-gradient(135deg, #12314f 0%, #ffb020 130%); }
+.ref-photo-2 { background: linear-gradient(135deg, #12314f 0%, #d9a03c 130%); }
 .ref-photo-3 { background: linear-gradient(135deg, #0b1e30 0%, #2f80ed 100%); }
-.ref-photo-4 { background: linear-gradient(135deg, #173c60 0%, #ffc94a 140%); }
+.ref-photo-4 { background: linear-gradient(135deg, #173c60 0%, #e8c173 140%); }
 .ref-photo-5 { background: linear-gradient(135deg, #0f2942 0%, #4aa8ff 100%); }
-.ref-photo-6 { background: linear-gradient(135deg, #12314f 0%, #ffb020 100%); }
+.ref-photo-6 { background: linear-gradient(135deg, #12314f 0%, #d9a03c 100%); }
 
 .ref-card figcaption { display: flex; flex-direction: column; gap: 2px; }
 .ref-card strong { color: var(--color-primary); font-size: 0.98rem; }
@@ -1074,6 +1074,18 @@ a.service-card { display: block; }
   font-size: 0.92rem;
   font-weight: 500;
   text-align: center;
+}
+
+.form-error {
+  background: #fdecec;
+  color: #a12e2e;
+  border: 1px solid #f3c6c6;
+  border-radius: 10px;
+  padding: 14px 16px;
+  font-size: 0.92rem;
+  font-weight: 500;
+  text-align: center;
+  margin: 0;
 }
 
 /* ---------- FAQ ---------- */

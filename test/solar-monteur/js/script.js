@@ -196,6 +196,8 @@
   }
 
   if (form) {
+    var formError = document.getElementById("kontaktFormError");
+
     form.addEventListener("submit", function (event) {
       event.preventDefault();
 
@@ -203,6 +205,8 @@
         form.reportValidity();
         return;
       }
+
+      if (formError) formError.hidden = true;
 
       var submitButton = form.querySelector("button[type=submit]");
       if (submitButton) submitButton.disabled = true;
@@ -219,7 +223,10 @@
         })
         .catch(function () {
           if (submitButton) submitButton.disabled = false;
-          alert("Beim Senden ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut oder rufen Sie uns direkt an.");
+          if (formError) {
+            formError.textContent = "Beim Senden ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut oder rufen Sie uns direkt an.";
+            formError.hidden = false;
+          }
         });
     });
   }
