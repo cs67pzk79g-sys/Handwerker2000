@@ -1,5 +1,5 @@
 [build]
   publish = "test"
-  # Deploy-preview skip TEMPORARILY DISABLED for this PR (big visual change,
-  # user wants a live preview link). Restore the ignore rule after merging:
-  # ignore = "if [ \"$CONTEXT\" = \"deploy-preview\" ]; then exit 0; else exit 1; fi"
+  # Skip deploy-preview builds (one per PR) to save build minutes.
+  # Exit 0 = skip, exit 1 = build. Production/branch deploys still run.
+  ignore = "if [ \"$CONTEXT\" = \"deploy-preview\" ]; then exit 0; else exit 1; fi"
