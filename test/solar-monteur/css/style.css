@@ -1689,6 +1689,8 @@ a.service-card { display: block; }
   .grid-3 { grid-template-columns: repeat(2, 1fr); }
   .timeline { grid-template-columns: repeat(2, 1fr); }
 
+  .section { padding: 64px 0; }
+
   .calculator { grid-template-columns: 1fr; }
   .kontakt-grid { grid-template-columns: 1fr; }
   .footer-grid { grid-template-columns: 1fr 1fr; }
@@ -1710,6 +1712,28 @@ a.service-card { display: block; }
   .feature-list { grid-template-columns: 1fr; }
   .detail-hero-head { flex-direction: column; align-items: flex-start; gap: 12px; }
   .detail-cta { padding: 36px 24px; }
+
+  .section { padding: 48px 0; }
+  .section-title { font-size: 1.5rem; }
+  .section-sub { margin-bottom: 28px; }
+
+  /* Testimonials: horizontales Swipe-Band statt 6 gestapelter Karten --
+     spart auf Mobile die meiste Scroll-Strecke im Abschnitt. */
+  .testimonial-grid {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    gap: 16px;
+    margin: 0 -24px;
+    padding: 4px 24px 8px;
+    scrollbar-width: none;
+  }
+  .testimonial-grid::-webkit-scrollbar { display: none; }
+  .testimonial-grid .testimonial {
+    scroll-snap-align: start;
+    flex: 0 0 85%;
+    max-width: 340px;
+  }
 }
 
 /* ---------- Reduced motion ---------- */
