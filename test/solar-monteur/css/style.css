@@ -1790,7 +1790,7 @@ a.service-card { display: block; }
 }
 
 @media (max-width: 620px) {
-  .grid-3 { grid-template-columns: 1fr; }
+  .grid-3 { grid-template-columns: 1fr; gap: 10px; }
   .stat-grid { grid-template-columns: repeat(2, 1fr); }
 
   /* Ablauf-Timeline: Nummer neben statt über dem Text, weniger Padding/Abstand --
@@ -1814,6 +1814,30 @@ a.service-card { display: block; }
   }
   .timeline-step h3 { grid-column: 2; grid-row: 1; font-size: 0.95rem; margin-bottom: 2px; }
   .timeline-step p { grid-column: 2; grid-row: 2; font-size: 0.85rem; }
+
+  /* Leistungen-Kacheln: gleiches Kompaktschema wie die Ablauf-Timeline --
+     Icon neben statt über dem Text, weniger Padding/Abstand. */
+  a.service-card,
+  article.service-card {
+    display: grid;
+    grid-template-columns: 32px 1fr;
+    column-gap: 12px;
+    row-gap: 2px;
+    align-items: start;
+    padding: 14px 16px;
+  }
+  .service-icon {
+    grid-column: 1;
+    grid-row: 1 / 3;
+    width: 32px;
+    height: 32px;
+    margin-bottom: 0;
+  }
+  .service-icon svg { width: 20px; height: 20px; }
+  .service-card h3 { grid-column: 2; grid-row: 1; font-size: 0.95rem; margin-bottom: 2px; }
+  .service-card p { grid-column: 2; grid-row: 2; font-size: 0.85rem; }
+  .service-card .service-more { grid-column: 2; grid-row: 3; margin-top: 4px; font-size: 0.8rem; }
+
   .field-row { grid-template-columns: 1fr; }
   .footer-grid { grid-template-columns: 1fr; }
   .footer-bottom { flex-direction: column; text-align: center; }
