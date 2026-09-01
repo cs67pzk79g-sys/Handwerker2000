@@ -115,20 +115,40 @@
 
       <h2>4. Cookies &amp; Google Analytics</h2>
       <p>
-        Diese Website kann Google Analytics (GA4) einsetzen, einen Webanalysedienst der
-        Google Ireland Limited, Gordon House, Barrow Street, Dublin 4, Irland. Google
+        Diese Website bindet vorbereitet Google Analytics (GA4) ein, einen Webanalysedienst
+        der Google Ireland Limited, Gordon House, Barrow Street, Dublin 4, Irland. Google
         Analytics verwendet Cookies bzw. ähnliche Technologien, um die Nutzung der Website
         auszuwerten (z. B. aufgerufene Seiten, Verweildauer, Herkunft der Besucher:innen).
       </p>
       <p>
-        Sofern Google Analytics eingebunden ist, geschieht dies erst nach Ihrer
-        Einwilligung über ein Cookie-Consent-Banner, Art. 6 Abs. 1 lit. a DSGVO. Ohne
-        Einwilligung wird kein Analyse-Cookie gesetzt. Sie können eine bereits erteilte
-        Einwilligung jederzeit über die Cookie-Einstellungen widerrufen oder die
-        Cookie-Speicherung in Ihrem Browser generell verhindern.
+        Die Einbindung geschieht ausschließlich nach Ihrer aktiven Einwilligung über das
+        Cookie-Consent-Banner, das beim ersten Besuch eingeblendet wird, Art. 6 Abs. 1
+        lit. a DSGVO. Erst wenn Sie auf &bdquo;Alle akzeptieren&ldquo; klicken, wird das
+        Google-Skript nachgeladen; bei &bdquo;Alle ablehnen&ldquo; oder ohne jede Reaktion
+        wird kein Analyse-Cookie gesetzt und kein Skript von Google geladen. Sie können
+        eine bereits erteilte Einwilligung jederzeit über den Link
+        &bdquo;Cookie-Einstellungen&ldquo; im Footer widerrufen.
+      </p>
+      <p class="legal-demo-note">
+        Hinweis: Da es sich um eine Demo-Seite ohne echten Geschäftsbetrieb handelt, ist im
+        Code aktuell noch keine echte GA4-Property hinterlegt (Platzhalter-Messungs-ID,
+        im Quellcode als TODO gekennzeichnet). Auch nach einer Einwilligung werden daher
+        derzeit keine echten Analysedaten an Google übermittelt.
       </p>
 
-      <h2>5. Ihre Rechte</h2>
+      <h2>5. Google Maps</h2>
+      <p>
+        Im Kontaktbereich bieten wir optional eine Kartenansicht von Google Maps an, einem
+        Dienst der Google Ireland Limited, Gordon House, Barrow Street, Dublin 4, Irland.
+        Die Karte wird nicht automatisch beim Aufruf dieser Seite geladen, sondern erst,
+        wenn Sie aktiv auf &bdquo;Karte laden&ldquo; klicken. Erst durch diesen Klick wird
+        eine Verbindung zu Google-Servern hergestellt und dabei unter anderem Ihre
+        IP-Adresse an Google übertragen, Art. 6 Abs. 1 lit. a DSGVO (Einwilligung durch
+        aktive Nutzung). Ohne Klick auf &bdquo;Karte laden&ldquo; findet keine Verbindung
+        zu Google statt.
+      </p>
+
+      <h2>6. Ihre Rechte</h2>
       <p>
         Sie haben im Rahmen der geltenden gesetzlichen Bestimmungen jederzeit das Recht
         auf unentgeltliche Auskunft über Ihre gespeicherten personenbezogenen Daten,
@@ -137,7 +157,7 @@
         ein Beschwerderecht bei der zuständigen Aufsichtsbehörde zu.
       </p>
 
-      <h2>6. Änderungen dieser Datenschutzerklärung</h2>
+      <h2>7. Änderungen dieser Datenschutzerklärung</h2>
       <p>
         Wir behalten uns vor, diese Datenschutzerklärung anzupassen, damit sie stets den
         aktuellen rechtlichen Anforderungen entspricht. Es gilt die jeweils aktuelle,
@@ -180,6 +200,7 @@
   <div class="container footer-bottom">
     <span>&copy; <span id="year"></span> Sonnenwerk Solartechnik &ndash; fiktiver Musterbetrieb.</span>
     <span class="footer-demo-note">Diese Seite ist ein Demo-/Vorzeigeprojekt ohne reale Geschäftstätigkeit.</span>
+    <button type="button" class="footer-cookie-link" id="cookieSettingsLink">Cookie-Einstellungen</button>
   </div>
 </footer>
 
@@ -188,9 +209,22 @@
   <span class="fab-label">Jetzt anrufen</span>
   <span class="fab-badge">24/7</span>
 </a>
+<div class="cookie-banner" id="cookieBanner" role="region" aria-label="Cookie-Einstellungen" hidden>
+  <div class="cookie-banner-inner">
+    <p class="cookie-banner-text">
+      Wir verwenden nur technisch notwendige Cookies, damit diese Seite funktioniert.
+      Mit Ihrer Einwilligung nutzen wir zusätzlich Google Analytics (GA4), um die
+      Seite zu verbessern. Details dazu in unserer
+      <a href="datenschutz.html">Datenschutzerklärung</a>.
+    </p>
+    <div class="cookie-banner-actions">
+      <button type="button" class="btn btn-ghost" id="cookieRejectAll">Alle ablehnen</button>
+      <button type="button" class="btn btn-primary" id="cookieAcceptAll">Alle akzeptieren</button>
+    </div>
+  </div>
+</div>
 
-<script>
-  document.getElementById("year").textContent = String(new Date().getFullYear());
-</script>
+<script src="js/script.js"></script>
+
 </body>
 </html>

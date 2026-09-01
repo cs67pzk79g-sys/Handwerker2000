@@ -25,17 +25,8 @@
 <link rel="stylesheet" href="css/style.css">
 
 <!--
-  Google Analytics (GA4) – bereit zum Aktivieren, siehe Kommentar in index.html.
-  Diese Seite ist ein gutes Conversion-Ziel (Formular abgeschickt), sobald
-  GA nach Consent aktiviert wird.
-
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){ dataLayer.push(arguments); }
-  gtag('js', new Date());
-  gtag('config', 'G-XXXXXXXXXX');
-</script>
+  Google Analytics (GA4): siehe Kommentar in index.html – zentral in
+  js/script.js implementiert, lädt erst nach Cookie-Consent.
 -->
 </head>
 <body>
@@ -151,6 +142,7 @@
   <div class="container footer-bottom">
     <span>&copy; <span id="year"></span> Sonnenwerk Solartechnik &ndash; fiktiver Musterbetrieb.</span>
     <span class="footer-demo-note">Diese Seite ist ein Demo-/Vorzeigeprojekt ohne reale Geschäftstätigkeit.</span>
+    <button type="button" class="footer-cookie-link" id="cookieSettingsLink">Cookie-Einstellungen</button>
   </div>
 </footer>
 
@@ -159,9 +151,22 @@
   <span class="fab-label">Jetzt anrufen</span>
   <span class="fab-badge">24/7</span>
 </a>
+<div class="cookie-banner" id="cookieBanner" role="region" aria-label="Cookie-Einstellungen" hidden>
+  <div class="cookie-banner-inner">
+    <p class="cookie-banner-text">
+      Wir verwenden nur technisch notwendige Cookies, damit diese Seite funktioniert.
+      Mit Ihrer Einwilligung nutzen wir zusätzlich Google Analytics (GA4), um die
+      Seite zu verbessern. Details dazu in unserer
+      <a href="datenschutz.html">Datenschutzerklärung</a>.
+    </p>
+    <div class="cookie-banner-actions">
+      <button type="button" class="btn btn-ghost" id="cookieRejectAll">Alle ablehnen</button>
+      <button type="button" class="btn btn-primary" id="cookieAcceptAll">Alle akzeptieren</button>
+    </div>
+  </div>
+</div>
 
-<script>
-  document.getElementById("year").textContent = String(new Date().getFullYear());
-</script>
+<script src="js/script.js"></script>
+
 </body>
 </html>

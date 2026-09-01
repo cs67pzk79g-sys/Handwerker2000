@@ -1059,6 +1059,34 @@ a.service-card { display: block; }
 
 .map-embed iframe { display: block; }
 
+.map-placeholder {
+  height: 280px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 12px;
+  padding: 24px;
+  background: linear-gradient(135deg, #eef3f9 0%, #e3ecf6 100%);
+}
+
+.map-placeholder svg { color: var(--color-blue); }
+
+.map-placeholder p {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+  max-width: 380px;
+}
+
+.map-placeholder-note {
+  font-size: 0.76rem !important;
+  color: var(--color-text-muted);
+}
+
+.map-placeholder-note a { color: var(--color-blue); text-decoration: underline; }
+
 .map-actions {
   display: flex;
   flex-wrap: wrap;
@@ -1373,10 +1401,76 @@ a.service-card { display: block; }
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 8px 20px;
   padding: 20px 24px 24px;
   font-size: 0.8rem;
   color: #8ba2bc;
+}
+
+.footer-cookie-link {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  font-size: 0.8rem;
+  color: #8ba2bc;
+  text-decoration: underline;
+  cursor: pointer;
+}
+.footer-cookie-link:hover { color: var(--color-accent); }
+
+/* ---------- Cookie-Consent-Banner ---------- */
+.cookie-banner {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 500;
+  background: var(--color-primary);
+  box-shadow: 0 -8px 28px rgba(0, 0, 0, 0.22);
+}
+.cookie-banner[hidden] { display: none; }
+
+.cookie-banner-inner {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.cookie-banner-text {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #d3e0ee;
+  max-width: 620px;
+}
+.cookie-banner-text a { color: #fff; text-decoration: underline; }
+
+.cookie-banner-actions {
+  display: flex;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.cookie-banner .btn-ghost {
+  border-color: rgba(255, 255, 255, 0.55);
+  color: #fff;
+}
+.cookie-banner .btn-ghost:hover {
+  border-color: #fff;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+@media (max-width: 620px) {
+  .cookie-banner-inner { flex-direction: column; align-items: stretch; }
+  .cookie-banner-actions { flex-direction: column-reverse; }
+  .cookie-banner-actions .btn { width: 100%; }
 }
 
 /* ---------- Reveal animation ---------- */
