@@ -266,14 +266,61 @@
       .join("&");
   }
 
+  // Eigene, freundliche Inline-Fehlermeldungen statt der Browser-Standard-
+  // Validierungs-Sprechblasen (das Formular traegt dafuer "novalidate").
+  var FIELD_MESSAGES = {
+    name: "Bitte geben Sie Ihren Namen ein.",
+    email: {
+      typeMismatch: "Bitte geben Sie eine gültige E-Mail-Adresse ein.",
+      valueMissing: "Bitte geben Sie Ihre E-Mail-Adresse ein.",
+    },
+    datenschutz: "Bitte bestätigen Sie die Datenschutzhinweise.",
+  };
+
+  function fieldMessage(input) {
+    var msgs = FIELD_MESSAGES[input.name];
+    if (typeof msgs === "string") return msgs;
+    if (msgs && input.validity.typeMismatch) return msgs.typeMismatch;
+    if (msgs && input.validity.valueMissing) return msgs.valueMissing;
+    return "Bitte überprüfen Sie dieses Feld.";
+  }
+
+  function validateField(input) {
+    var errorEl = document.getElementById(input.id + "Error");
+    var wrapper = input.closest(".field");
+    var valid = input.validity.valid;
+    if (wrapper) wrapper.classList.toggle("is-invalid", !valid);
+    if (errorEl) {
+      errorEl.textContent = valid ? "" : fieldMessage(input);
+      errorEl.hidden = valid;
+    }
+    return valid;
+  }
+
   if (form) {
     var formError = document.getElementById("kontaktFormError");
+    var requiredFields = [
+      document.getElementById("name"),
+      document.getElementById("email"),
+      document.getElementById("datenschutz"),
+    ].filter(Boolean);
+
+    requiredFields.forEach(function (input) {
+      input.addEventListener("input", function () { validateField(input); });
+      input.addEventListener("change", function () { validateField(input); });
+    });
 
     form.addEventListener("submit", function (event) {
       event.preventDefault();
 
-      if (!form.checkValidity()) {
-        form.reportValidity();
+      var firstInvalid = null;
+      requiredFields.forEach(function (input) {
+        var valid = validateField(input);
+        if (!valid && !firstInvalid) firstInvalid = input;
+      });
+
+      if (firstInvalid) {
+        firstInvalid.focus();
         return;
       }
 
