@@ -19,6 +19,44 @@
     });
   }
 
+  // ---------- Scroll-spy: highlight the current section's nav link ----------
+  // Covers both the one-page main nav on index.html (#leistungen, #ablauf, …)
+  // and the in-page Sprungmarken-Leiste on the Leistungen-Detailseiten
+  // (#wissenswertes, #ablauf, …). Links whose hash has no matching section
+  // on this page simply never get observed — harmless no-op.
+  function setupScrollSpy(navSelector) {
+    var links = document.querySelectorAll(navSelector);
+    if (!links.length || !("IntersectionObserver" in window)) return;
+
+    var linkByHash = {};
+    links.forEach(function (link) {
+      var hash = (link.getAttribute("href") || "").split("#")[1];
+      if (hash) linkByHash[hash] = link;
+    });
+
+    var sections = Object.keys(linkByHash)
+      .map(function (id) { return document.getElementById(id); })
+      .filter(function (el) { return el; });
+    if (!sections.length) return;
+
+    var spyObserver = new IntersectionObserver(
+      function (entries) {
+        entries.forEach(function (entry) {
+          if (!entry.isIntersecting) return;
+          var link = linkByHash[entry.target.id];
+          if (!link) return;
+          links.forEach(function (l) { l.classList.remove("is-active"); });
+          link.classList.add("is-active");
+        });
+      },
+      { rootMargin: "-45% 0px -50% 0px", threshold: 0 }
+    );
+    sections.forEach(function (section) { spyObserver.observe(section); });
+  }
+
+  setupScrollSpy(".main-nav a[href^=\"#\"]:not(.btn)");
+  setupScrollSpy(".detail-quicknav a[href^=\"#\"]");
+
   // ---------- Sticky header shadow ----------
   var header = document.getElementById("siteHeader");
   if (header) {
