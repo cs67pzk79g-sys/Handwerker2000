@@ -2,26 +2,24 @@
 
 ## Netlify Deployment – Credit-Sparsamkeit
 
-Dieses Projekt ist mit Netlify (Free Plan) verbunden und deployt automatisch bei jedem
-Push zu GitHub (`main`-Branch). Der Free Plan hat nur 300 Credits/Monat, und ein
-einzelnes Production-Deployment kostet 15 Credits (~20 Deploys/Monat insgesamt
-verfügbar).
+Dieses Projekt ist mit Netlify (Free Plan) verbunden. Der Free Plan hat nur 300
+Credits/Monat, und ein einzelnes Deployment kostet 15 Credits (~20 Deploys/Monat
+insgesamt verfügbar).
 
-Deshalb gilt für alle Änderungen an diesem Repo:
+`netlify.toml`s `[build].ignore`-Skript sorgt dafür, dass **nur ein Merge/Push auf den
+production-Branch (`main`) einen echten Netlify-Build auslöst** – PR-Deploy-Previews und
+Branch-Deploys (Pushes auf jeden anderen Branch, inkl. Feature-Branches) werden immer
+übersprungen. Das heißt:
 
-- **Änderungen bündeln.** Zusammengehörige Fixes/Features in einem Commit/Push
-  zusammenfassen statt viele kleine Einzel-Pushes zu machen – jeder Push löst
-  automatisch einen kostenpflichtigen Deploy aus.
-- **Erst lokal fertig testen, dann pushen.** Beim Debuggen oder Testen mehrerer Fixes
-  hintereinander: lokal (Playwright, lokaler HTTP-Server o.ä.) vollständig verifizieren,
-  dann in einem gebündelten Commit pushen – nicht nach jeder kleinen Änderung einzeln.
-- **Vor mehreren Pushes kurz hintereinander nachfragen**, wenn absehbar ist, dass noch
-  weitere Änderungen folgen werden.
-- **Lokale Vorschau statt Push zum Testen.** Für HTML/CSS/JS-Änderungen wenn möglich
-  einen lokalen Server/Vorschau nutzen statt eines echten Pushes zu Netlify, um
-  Deploy-Credits zu sparen.
-
-Das bestehende `[build].ignore`-Skript in `netlify.toml` überspringt bereits
-Deploy-Preview-Builds (ein Preview-Deploy pro PR) standardmäßig – dieser Schalter
-sollte nur für PRs mit großen visuellen Änderungen temporär aktiviert und danach sofort
-wieder zurückgesetzt werden (per eigenem PR).
+- **Pushen zu GitHub (Feature-Branch, PRs) ist frei nutzbar** und löst keinen
+  Netlify-Build aus – dort gibt es kein Credit-Limit zu beachten.
+- **Nur ein Merge auf `main` kostet Netlify-Credits.** Deshalb: Merges auf `main`
+  bündeln statt nach jedem kleinen PR sofort zu mergen, und vor mehreren Merges kurz
+  hintereinander kurz nachfragen, wenn absehbar ist, dass noch mehr folgt.
+- **Erst lokal fertig testen, dann committen/pushen/PR/merge.** Beim Debuggen oder
+  Testen mehrerer Fixes hintereinander: lokal (Playwright, lokaler HTTP-Server o.ä.)
+  vollständig verifizieren, dann in einem gebündelten Commit pushen.
+- Für PRs mit großen visuellen Änderungen, bei denen ein echter Deploy-Preview-Link
+  gebraucht wird: den `ignore`-Schalter in `netlify.toml` temporär so ändern, dass
+  `deploy-preview` ebenfalls baut, den Link teilen, und den Schalter danach sofort in
+  einem eigenen PR zurücksetzen.
