@@ -3,7 +3,7 @@
   Type:   IBM Plex Sans (400/500/600) fuer Ueberschriften + Fliesstext,
           IBM Plex Mono (400/500) fuer Kicker, Kennzahlen, Spec-Werte
   Color:  warmes Papier (#f7f5f0 / #efeae0) auf warmer Tinte (#262019),
-          ein einziger funktionaler Akzent (#a8621c), sparsam eingesetzt
+          ein einziger funktionaler Akzent (#d9a03c, sonniges Gold), sparsam eingesetzt
   Radius: 3px durchgaengig (keine Pillen, keine grossen Rundungen)
   Rhythm: Haarlinien statt Schatten; ruhige Karten ohne Hover-Lift
 */
@@ -51,8 +51,8 @@
 :root {
   --color-primary: #262019;
   --color-primary-dark: #1a160f;
-  --color-accent: #a8621c;
-  --color-accent-dark: #874e15;
+  --color-accent: #d9a03c;
+  --color-accent-dark: #b8862e;
   --color-blue: #874e15;
   --color-bg: #f7f5f0;
   --color-bg-alt: #efeae0;
@@ -285,7 +285,7 @@ input:not([type="range"]):focus-visible {
 
 .btn-primary {
   background: var(--color-accent);
-  color: #fffdf9;
+  color: var(--color-primary);
 }
 
 .btn-primary:hover { background: var(--color-accent-dark); }
@@ -552,7 +552,7 @@ a.service-card { display: block; }
   height: 32px;
   border-radius: var(--radius);
   background: var(--color-accent);
-  color: #fffdf9;
+  color: var(--color-primary);
   font-weight: 500;
   font-family: var(--font-mono);
   margin-bottom: 14px;
@@ -674,21 +674,21 @@ a.service-card { display: block; }
 .field input[type="range"]:active::-webkit-slider-thumb,
 .field input[type="range"]:hover::-webkit-slider-thumb {
   transform: scale(1.12);
-  box-shadow: 0 4px 14px rgba(168, 98, 28, 0.35);
+  box-shadow: 0 4px 14px rgba(217, 160, 60, 0.35);
 }
 
 .field input[type="range"]:active::-moz-range-thumb,
 .field input[type="range"]:hover::-moz-range-thumb {
   transform: scale(1.12);
-  box-shadow: 0 4px 14px rgba(168, 98, 28, 0.35);
+  box-shadow: 0 4px 14px rgba(217, 160, 60, 0.35);
 }
 
 .field input[type="range"]:focus-visible::-webkit-slider-thumb {
-  box-shadow: 0 0 0 4px rgba(168, 98, 28, 0.22), 0 2px 6px rgba(38, 32, 22, 0.22);
+  box-shadow: 0 0 0 4px rgba(217, 160, 60, 0.22), 0 2px 6px rgba(38, 32, 22, 0.22);
 }
 
 .field input[type="range"]:focus-visible::-moz-range-thumb {
-  box-shadow: 0 0 0 4px rgba(168, 98, 28, 0.22), 0 2px 6px rgba(38, 32, 22, 0.22);
+  box-shadow: 0 0 0 4px rgba(217, 160, 60, 0.22), 0 2px 6px rgba(38, 32, 22, 0.22);
 }
 
 .calc-results { display: flex; flex-direction: column; gap: 14px; }
@@ -756,7 +756,7 @@ a.service-card { display: block; }
 .ref-photo-3 { background: linear-gradient(135deg, #1a160f 0%, #6b5238 100%); }
 .ref-photo-4 { background: linear-gradient(135deg, #4a3c2a 0%, #c98a3e 140%); }
 .ref-photo-5 { background: linear-gradient(135deg, #262019 0%, #8a6a3f 100%); }
-.ref-photo-6 { background: linear-gradient(135deg, #3d3226 0%, #a8621c 100%); }
+.ref-photo-6 { background: linear-gradient(135deg, #3d3226 0%, #d9a03c 100%); }
 
 .ref-card figcaption { display: flex; flex-direction: column; gap: 2px; }
 .ref-card strong { color: var(--color-primary); font-size: 0.98rem; }
@@ -913,7 +913,7 @@ a.service-card { display: block; }
 .kontakt-form textarea:focus {
   outline: none;
   border-color: var(--color-accent);
-  box-shadow: 0 0 0 3px rgba(168, 98, 28, 0.15);
+  box-shadow: 0 0 0 3px rgba(217, 160, 60, 0.15);
 }
 
 .field-checkbox { display: flex; align-items: flex-start; gap: 10px; }
@@ -1023,7 +1023,7 @@ a.service-card { display: block; }
 
 .fab .fab-badge {
   background: var(--color-accent);
-  color: #fffdf9;
+  color: var(--color-primary);
   font-size: 0.68rem;
   font-weight: 600;
   letter-spacing: 0.02em;
@@ -1197,6 +1197,7 @@ a.service-card { display: block; }
 }
 
 .footer-brand .logo-text { color: #fff; }
+.footer-brand .logo-accent { color: var(--color-accent); }
 .footer-brand p { color: #b8ab8f; font-size: 0.9rem; margin-top: 12px; }
 
 .footer-col { display: flex; flex-direction: column; gap: 10px; }
