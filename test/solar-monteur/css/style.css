@@ -1791,8 +1791,29 @@ a.service-card { display: block; }
 
 @media (max-width: 620px) {
   .grid-3 { grid-template-columns: 1fr; }
-  .timeline { grid-template-columns: 1fr; }
   .stat-grid { grid-template-columns: repeat(2, 1fr); }
+
+  /* Ablauf-Timeline: Nummer neben statt über dem Text, weniger Padding/Abstand --
+     halbiert in etwa die Scroll-Strecke gegenüber gestapelten Karten. */
+  .timeline { grid-template-columns: 1fr; gap: 10px; }
+  .timeline-step {
+    display: grid;
+    grid-template-columns: 30px 1fr;
+    column-gap: 12px;
+    row-gap: 2px;
+    align-items: start;
+    padding: 14px 16px;
+  }
+  .timeline-num {
+    grid-column: 1;
+    grid-row: 1 / 3;
+    width: 30px;
+    height: 30px;
+    font-size: 0.85rem;
+    margin-bottom: 0;
+  }
+  .timeline-step h3 { grid-column: 2; grid-row: 1; font-size: 0.95rem; margin-bottom: 2px; }
+  .timeline-step p { grid-column: 2; grid-row: 2; font-size: 0.85rem; }
   .field-row { grid-template-columns: 1fr; }
   .footer-grid { grid-template-columns: 1fr; }
   .footer-bottom { flex-direction: column; text-align: center; }
