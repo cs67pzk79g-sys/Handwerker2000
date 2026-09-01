@@ -222,6 +222,39 @@
 
   updateCalculator();
 
+  // ---------- Hero-Mini-Rechner ----------
+  // Vereinfachte Vorschau des Ersparnis-Rechners direkt im Hero: ein Regler
+  // (Stromverbrauch), Dachfläche und Strompreis auf typische Werte fixiert.
+  // Nutzt dieselben Konstanten/Formeln wie oben, damit die Zahlen zum
+  // vollständigen Rechner weiter unten passen.
+  var heroConsumption = document.getElementById("heroConsumption");
+  var heroConsumptionOut = document.getElementById("heroConsumptionOut");
+  var heroOutKwp = document.getElementById("heroOutKwp");
+  var heroOutSavings = document.getElementById("heroOutSavings");
+  var HERO_DEFAULT_PRICE = 0.32;
+
+  function updateHeroCalculator() {
+    if (!heroConsumption) return;
+
+    var yearlyConsumption = Number(heroConsumption.value);
+    heroConsumptionOut.textContent = formatNumber(yearlyConsumption) + " kWh";
+    updateRangeFill(heroConsumption);
+
+    var kwp = Math.max(yearlyConsumption / YIELD_PER_KWP * 1.6, 1);
+    var yearlyProduction = kwp * YIELD_PER_KWP;
+    var selfConsumed = Math.min(yearlyProduction * SELF_CONSUMPTION_SHARE, yearlyConsumption);
+    var fedIn = Math.max(yearlyProduction - selfConsumed, 0);
+    var yearlySavings = selfConsumed * HERO_DEFAULT_PRICE + fedIn * FEED_IN_TARIFF;
+
+    heroOutKwp.textContent = "≈ " + formatNumber(kwp, 1) + " kWp";
+    heroOutSavings.textContent = "≈ " + formatNumber(yearlySavings) + " €";
+  }
+
+  if (heroConsumption) {
+    heroConsumption.addEventListener("input", updateHeroCalculator);
+    updateHeroCalculator();
+  }
+
   // ---------- Kontaktformular (Netlify Forms) ----------
   var form = document.getElementById("kontaktForm");
 

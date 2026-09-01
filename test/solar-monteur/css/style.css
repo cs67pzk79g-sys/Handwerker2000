@@ -449,20 +449,22 @@ input:not([type="range"]):focus-visible {
 
 .hero .btn-primary { font-size: 0.98rem; }
 
-/* --- Diagramm-Spalte: technische Strichzeichnung statt Foto --- */
-.hero-diagram {
-  color: var(--color-primary);
-  text-align: center;
-  padding: 0 8px;
+/* --- Rechner-Spalte: Mini-Ersparnisrechner statt Illustration --- */
+.hero-calc {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-bg-alt);
+  padding: 28px 26px 26px;
 }
 
-.hero-diagram svg { margin: 0 auto; }
+.hero-calc .eyebrow { margin-bottom: 18px; }
 
-.hero-diagram-caption {
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  color: var(--color-text-muted);
-  margin-top: 10px;
+.hero-calc-results {
+  display: flex;
+  gap: 32px;
+  margin: 20px 0 18px;
+  padding-top: 18px;
+  border-top: 1px solid var(--color-border);
 }
 
 /* Statistik-Leiste: helle Spec-Zeile mit Haarlinie statt dunklem Balken */
@@ -1376,10 +1378,10 @@ a.service-card { display: block; }
   .fab:hover { transform: none; }
 }
 
-/* ---------- Hero: Tablet / Mobil (Diagramm verkleinert unter den Text) ---------- */
+/* ---------- Hero: Tablet / Mobil (Rechner unter den Text, volle Breite) ---------- */
 @media (max-width: 1200px) {
   .hero-inner { padding: 56px 24px 8px; }
-  .hero-diagram { max-width: 360px; margin: 4px auto 0; }
+  .hero-calc { margin-top: 8px; }
   .hero-copy { max-width: none; }
   .hero-trust { white-space: normal; }
 }
@@ -1390,7 +1392,7 @@ a.service-card { display: block; }
 
 @media (max-width: 620px) {
   .hero-inner { padding: 48px 24px 8px; }
-  .hero-diagram { max-width: 280px; }
+  .hero-calc-results { gap: 24px; }
 
   .hero h1 { font-size: 2.1rem; line-height: 1.16; }
   .hero-sub { font-size: 1rem; margin-bottom: 24px; }
