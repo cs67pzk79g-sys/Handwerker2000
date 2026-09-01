@@ -53,7 +53,7 @@
   --color-primary-dark: #1a160f;
   --color-accent: #a8621c;
   --color-accent-dark: #874e15;
-  --color-blue: #a8621c;
+  --color-blue: #874e15;
   --color-bg: #f7f5f0;
   --color-bg-alt: #efeae0;
   --color-text: #262019;
@@ -230,6 +230,17 @@ input:not([type="range"]):focus-visible {
 
 .main-nav a:hover { color: var(--color-blue); }
 
+.main-nav a.is-active { color: var(--color-blue); }
+.main-nav a.is-active::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -6px;
+  height: 2px;
+  background: var(--color-accent);
+}
+
 .header-cta { display: flex; align-items: center; gap: 14px; flex-shrink: 0; }
 
 .btn.nav-cta-mobile { display: none; }
@@ -274,7 +285,7 @@ input:not([type="range"]):focus-visible {
 
 .btn-primary {
   background: var(--color-accent);
-  color: #fbf3e8;
+  color: #fffdf9;
 }
 
 .btn-primary:hover { background: var(--color-accent-dark); }
@@ -541,7 +552,7 @@ a.service-card { display: block; }
   height: 32px;
   border-radius: var(--radius);
   background: var(--color-accent);
-  color: #fbf3e8;
+  color: #fffdf9;
   font-weight: 500;
   font-family: var(--font-mono);
   margin-bottom: 14px;
@@ -1012,7 +1023,7 @@ a.service-card { display: block; }
 
 .fab .fab-badge {
   background: var(--color-accent);
-  color: #fbf3e8;
+  color: #fffdf9;
   font-size: 0.68rem;
   font-weight: 600;
   letter-spacing: 0.02em;
@@ -1087,6 +1098,31 @@ a.service-card { display: block; }
 .detail-hero h1 { font-size: clamp(1.7rem, 3.4vw, 2.4rem); margin: 0; }
 .detail-lead { font-size: 1.05rem; max-width: 62ch; margin-bottom: 26px; }
 .detail-actions { display: flex; flex-wrap: wrap; gap: 14px; margin-bottom: 8px; }
+
+/* Sprungmarken-Leiste unter dem Detail-Hero: schnelle Navigation auf langen Leistungsseiten */
+.detail-quicknav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 6px;
+  padding: 22px 0;
+  margin-top: 8px;
+  border-top: 1px solid var(--color-border);
+}
+
+.detail-quicknav a {
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-text-muted);
+  padding: 6px 10px;
+  border-radius: var(--radius);
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.detail-quicknav a:hover,
+.detail-quicknav a:focus-visible,
+.detail-quicknav a.is-active { color: var(--color-primary); background: var(--color-bg-alt); }
 
 .detail-article { max-width: 760px; }
 .detail-article h3 { font-size: 1.15rem; margin: 32px 0 10px; }
