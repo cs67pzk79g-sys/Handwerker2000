@@ -1,8 +1,11 @@
 [build]
   publish = "test"
-  # Skip deploy-preview builds (one per PR) to save build minutes.
-  # Exit 0 = skip, exit 1 = build. Production/branch deploys still run.
-  ignore = "if [ \"$CONTEXT\" = \"deploy-preview\" ]; then exit 0; else exit 1; fi"
+  # Only build on production (a push/merge to the site's production
+  # branch). Deploy-previews (PRs) and branch-deploys (pushes to any
+  # other branch) are skipped to conserve the Netlify free plan's
+  # limited monthly build credits - pushing to GitHub should never by
+  # itself trigger a paid Netlify deploy. Exit 0 = skip, exit 1 = build.
+  ignore = "if [ \"$CONTEXT\" = \"production\" ]; then exit 1; else exit 0; fi"
 
 # Serve the branded solar-monteur 404 page for unmatched paths under that
 # project, instead of falling back to the site-wide generic 404.html.
