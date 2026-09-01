@@ -108,6 +108,13 @@
   var staggerParent = null;
   var staggerIndex = 0;
   revealEls.forEach(function (el) {
+    // Explizite Verzoegerung (z.B. damit ein Element erst nach einer
+    // Kaskade in einem Nachbar-Container einsetzt) hat Vorrang vor der
+    // automatischen Geschwister-Staffelung.
+    if (el.hasAttribute("data-reveal-delay")) {
+      el.style.transitionDelay = el.getAttribute("data-reveal-delay") + "ms";
+      return;
+    }
     if (el.parentElement !== staggerParent) {
       staggerParent = el.parentElement;
       staggerIndex = 0;
@@ -133,11 +140,60 @@
     revealEls.forEach(function (el) { el.classList.add("is-visible"); });
   }
 
-  // ---------- FAQ: smooth accordion ----------
   var prefersReducedMotion = window.matchMedia
     ? window.matchMedia("(prefers-reduced-motion: reduce)").matches
     : false;
 
+  // ---------- Kennzahlen-Leiste: Count-up beim Scrollen ins Bild ----------
+  var statNumEls = document.querySelectorAll(".stat-num[data-count-target]");
+  if (statNumEls.length) {
+    var formatStatValue = function (value, decimals) {
+      return value.toLocaleString("de-DE", {
+        minimumFractionDigits: decimals,
+        maximumFractionDigits: decimals,
+      });
+    };
+
+    var animateStatCount = function (el) {
+      var target = parseFloat(el.getAttribute("data-count-target"));
+      var decimals = parseInt(el.getAttribute("data-count-decimals") || "0", 10);
+      var suffix = el.getAttribute("data-count-suffix") || "";
+
+      if (prefersReducedMotion) {
+        el.textContent = formatStatValue(target, decimals) + suffix;
+        return;
+      }
+
+      var duration = 1400;
+      var startTime = null;
+
+      function step(timestamp) {
+        if (startTime === null) startTime = timestamp;
+        var progress = Math.min((timestamp - startTime) / duration, 1);
+        var eased = 1 - Math.pow(1 - progress, 3);
+        el.textContent = formatStatValue(target * eased, decimals) + suffix;
+        if (progress < 1) window.requestAnimationFrame(step);
+      }
+      window.requestAnimationFrame(step);
+    };
+
+    if ("IntersectionObserver" in window) {
+      var statObserver = new IntersectionObserver(
+        function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+              animateStatCount(entry.target);
+              statObserver.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.5 }
+      );
+      statNumEls.forEach(function (el) { statObserver.observe(el); });
+    }
+  }
+
+  // ---------- FAQ: smooth accordion ----------
   document.querySelectorAll(".faq-item").forEach(function (details) {
     var summary = details.querySelector("summary");
     var panel = details.querySelector("p");
@@ -266,7 +322,17 @@
   var heroConsumptionOut = document.getElementById("heroConsumptionOut");
   var heroOutKwp = document.getElementById("heroOutKwp");
   var heroOutSavings = document.getElementById("heroOutSavings");
+  var heroModuleIcons = document.querySelectorAll("#heroModuleGauge .module-icon");
   var HERO_DEFAULT_PRICE = 0.32;
+
+  // Modul-Gauge-Grenzen aus den Regler-Grenzen ableiten, damit sie automatisch
+  // mitwandern, falls min/max am Regler jemals angepasst werden.
+  var heroKwpMin = heroConsumption
+    ? Number(heroConsumption.min) / YIELD_PER_KWP * 1.6
+    : 0;
+  var heroKwpMax = heroConsumption
+    ? Number(heroConsumption.max) / YIELD_PER_KWP * 1.6
+    : 1;
 
   function updateHeroCalculator() {
     if (!heroConsumption) return;
@@ -283,6 +349,14 @@
 
     heroOutKwp.textContent = "≈ " + formatNumber(kwp, 1) + " kWp";
     heroOutSavings.textContent = "≈ " + formatNumber(yearlySavings) + " €";
+
+    if (heroModuleIcons.length) {
+      var ratio = (kwp - heroKwpMin) / (heroKwpMax - heroKwpMin);
+      var activeCount = Math.max(1, Math.round(ratio * heroModuleIcons.length));
+      heroModuleIcons.forEach(function (icon, i) {
+        icon.classList.toggle("is-active", i < activeCount);
+      });
+    }
   }
 
   if (heroConsumption) {
