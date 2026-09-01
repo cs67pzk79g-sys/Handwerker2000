@@ -145,7 +145,20 @@
 
 * { box-sizing: border-box; }
 
-html { scroll-behavior: smooth; }
+html {
+  scroll-behavior: smooth;
+  scrollbar-color: var(--color-border) var(--color-bg);
+  scrollbar-width: thin;
+}
+
+::-webkit-scrollbar { width: 12px; height: 12px; }
+::-webkit-scrollbar-track { background: var(--color-bg); }
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 999px;
+  border: 3px solid var(--color-bg);
+}
+::-webkit-scrollbar-thumb:hover { background: var(--color-text-muted); }
 
 body {
   margin: 0;
@@ -488,7 +501,16 @@ input:not([type="range"]):focus-visible {
 .hero {
   position: relative;
   background: var(--color-bg);
-  border-bottom: 1px solid var(--color-border);
+}
+
+.hero::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, var(--color-border) 15%, var(--color-border) 85%, transparent 100%);
 }
 
 .hero-inner {
@@ -525,6 +547,12 @@ input:not([type="range"]):focus-visible {
   max-width: 46ch;
   margin-bottom: 28px;
   color: var(--color-text-muted);
+}
+
+.mono-stat {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  color: var(--color-primary);
 }
 
 .hero-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 24px; margin-bottom: 30px; }
@@ -593,12 +621,57 @@ input:not([type="range"]):focus-visible {
 }
 
 .stat { display: flex; flex-direction: column; gap: 4px; }
+
+/* Dezenter Scroll-Hinweis am Hero-Ende: haelftig ueber die Sektionsgrenze
+   gesetzt (negativer Margin), damit er die Haarlinien-Naht markiert. */
+.hero-scroll-cue {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  margin: -17px auto 0;
+  border-radius: 50%;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-muted);
+  transition: color 0.2s ease, border-color 0.2s ease;
+  animation: heroScrollCueBounce 2.4s ease-in-out infinite;
+}
+
+.hero-scroll-cue:hover { color: var(--color-blue); border-color: var(--color-accent); }
+
+@keyframes heroScrollCueBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(5px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-scroll-cue { animation: none; }
+}
+
+@media (max-width: 1200px) {
+  .hero-scroll-cue { display: none; }
+}
 .stat-num { font-family: var(--font-mono); font-weight: 500; font-size: 1.35rem; color: var(--color-primary); }
 .stat-label { font-family: var(--font-mono); color: var(--color-text-muted); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.03em; }
 
 /* ---------- Sections ---------- */
-.section { padding: 84px 0; }
+.section { position: relative; padding: 84px 0; }
 .section-alt { background: var(--color-bg-alt); }
+
+/* Fadende Haarlinie statt hartem Farbwechsel zwischen aufeinanderfolgenden
+   Sektionen -- greift auch dort, wo zwei .section-alt direkt aufeinander
+   folgen und sonst optisch zu einem Block verschmelzen wuerden. */
+.section + .section::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, var(--color-border) 15%, var(--color-border) 85%, transparent 100%);
+}
 
 .section-eyebrow {
   font-family: var(--font-mono);
@@ -887,6 +960,23 @@ a.service-card { display: block; }
   background-size: contain;
 }
 
+.ref-badge {
+  position: absolute;
+  left: 12px;
+  top: 12px;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  border-radius: var(--radius);
+  padding: 4px 8px;
+  backdrop-filter: blur(2px);
+}
+
 .ref-photo-2 { background: linear-gradient(135deg, #3d3226 0%, #c98a3e 130%); }
 .ref-photo-3 { background: linear-gradient(135deg, #1a160f 0%, #6b5238 100%); }
 .ref-photo-4 { background: linear-gradient(135deg, #4a3c2a 0%, #c98a3e 140%); }
@@ -896,6 +986,12 @@ a.service-card { display: block; }
 .ref-card figcaption { display: flex; flex-direction: column; gap: 2px; }
 .ref-card strong { color: var(--color-primary); font-size: 0.98rem; }
 .ref-card span { color: var(--color-text-muted); font-size: 0.85rem; }
+.ref-card .ref-result {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--color-blue);
+  margin-top: 2px;
+}
 
 /* ---------- Förderung ---------- */
 .funding-card h3 { font-size: 1.05rem; }
