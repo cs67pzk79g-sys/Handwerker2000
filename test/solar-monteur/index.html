@@ -231,19 +231,19 @@
   <section class="hero">
 
     <div class="container hero-inner">
-      <div class="hero-copy reveal">
-        <p class="eyebrow">Meisterbetrieb für Photovoltaik &amp; Speicher</p>
-        <h1>Saubere Energie<br> vom eigenen Dach.</h1>
-        <p class="hero-sub">
+      <div class="hero-copy">
+        <p class="eyebrow reveal">Meisterbetrieb für Photovoltaik &amp; Speicher</p>
+        <h1 class="reveal">Saubere Energie<br> vom eigenen Dach.</h1>
+        <p class="hero-sub reveal">
           Wir planen, montieren und warten Photovoltaik-Anlagen, Batteriespeicher und
           Wallboxen &ndash; aus einer Hand, termintreu und mit persönlicher Beratung
           direkt aus Freiburg. Bereits <span class="mono-stat">1.240+</span> Anlagen realisiert.
         </p>
-        <div class="hero-actions">
+        <div class="hero-actions reveal">
           <a href="#kontakt" class="btn btn-primary btn-lg">Kostenlose Dachanalyse anfordern</a>
           <a href="#referenzen" class="hero-link">Referenzen ansehen <span aria-hidden="true">&rarr;</span></a>
         </div>
-        <ul class="hero-trust">
+        <ul class="hero-trust reveal">
           <li>✓ Meisterbetrieb</li>
           <li>✓ VDE- &amp; TÜV-zertifiziert</li>
           <li>✓ Festpreisgarantie</li>
@@ -251,7 +251,7 @@
         </ul>
       </div>
 
-      <div class="hero-calc reveal">
+      <div class="hero-calc reveal" data-reveal-delay="280">
         <p class="eyebrow">In 10 Sekunden: Ihre Ersparnis</p>
         <div class="field">
           <div class="field-head">
@@ -266,6 +266,16 @@
           <div class="stat">
             <span class="stat-num" id="heroOutKwp">–</span>
             <span class="stat-label">Empfohlene Anlagengröße</span>
+            <div class="module-gauge" id="heroModuleGauge" aria-hidden="true">
+              <svg class="module-icon" width="14" height="14" viewBox="0 0 24 24" fill="none"><rect x="3" y="6" width="18" height="12" rx="1.5" stroke="currentColor" stroke-width="2"/><path d="M3 10.3h18M3 14.7h18M9 6v12M15 6v12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+              <svg class="module-icon" width="14" height="14" viewBox="0 0 24 24" fill="none"><rect x="3" y="6" width="18" height="12" rx="1.5" stroke="currentColor" stroke-width="2"/><path d="M3 10.3h18M3 14.7h18M9 6v12M15 6v12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+              <svg class="module-icon" width="14" height="14" viewBox="0 0 24 24" fill="none"><rect x="3" y="6" width="18" height="12" rx="1.5" stroke="currentColor" stroke-width="2"/><path d="M3 10.3h18M3 14.7h18M9 6v12M15 6v12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+              <svg class="module-icon" width="14" height="14" viewBox="0 0 24 24" fill="none"><rect x="3" y="6" width="18" height="12" rx="1.5" stroke="currentColor" stroke-width="2"/><path d="M3 10.3h18M3 14.7h18M9 6v12M15 6v12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+              <svg class="module-icon" width="14" height="14" viewBox="0 0 24 24" fill="none"><rect x="3" y="6" width="18" height="12" rx="1.5" stroke="currentColor" stroke-width="2"/><path d="M3 10.3h18M3 14.7h18M9 6v12M15 6v12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+              <svg class="module-icon" width="14" height="14" viewBox="0 0 24 24" fill="none"><rect x="3" y="6" width="18" height="12" rx="1.5" stroke="currentColor" stroke-width="2"/><path d="M3 10.3h18M3 14.7h18M9 6v12M15 6v12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+              <svg class="module-icon" width="14" height="14" viewBox="0 0 24 24" fill="none"><rect x="3" y="6" width="18" height="12" rx="1.5" stroke="currentColor" stroke-width="2"/><path d="M3 10.3h18M3 14.7h18M9 6v12M15 6v12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+              <svg class="module-icon" width="14" height="14" viewBox="0 0 24 24" fill="none"><rect x="3" y="6" width="18" height="12" rx="1.5" stroke="currentColor" stroke-width="2"/><path d="M3 10.3h18M3 14.7h18M9 6v12M15 6v12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            </div>
           </div>
           <div class="stat">
             <span class="stat-num" id="heroOutSavings">–</span>
@@ -278,10 +288,10 @@
 
     <div class="stat-bar">
       <div class="container stat-grid">
-        <div class="stat"><span class="stat-num">17+</span><span class="stat-label">Jahre Erfahrung</span></div>
-        <div class="stat"><span class="stat-num">1.240+</span><span class="stat-label">installierte Anlagen</span></div>
-        <div class="stat"><span class="stat-num">9,6 MWp</span><span class="stat-label">Gesamtleistung</span></div>
-        <div class="stat"><span class="stat-num">4,9 / 5</span><span class="stat-label">Kundenbewertung</span></div>
+        <div class="stat"><span class="stat-num" data-count-target="17" data-count-decimals="0" data-count-suffix="+">17+</span><span class="stat-label">Jahre Erfahrung</span></div>
+        <div class="stat"><span class="stat-num" data-count-target="1240" data-count-decimals="0" data-count-suffix="+">1.240+</span><span class="stat-label">installierte Anlagen</span></div>
+        <div class="stat"><span class="stat-num" data-count-target="9.6" data-count-decimals="1" data-count-suffix=" MWp">9,6 MWp</span><span class="stat-label">Gesamtleistung</span></div>
+        <div class="stat"><span class="stat-num" data-count-target="4.9" data-count-decimals="1" data-count-suffix=" / 5">4,9 / 5</span><span class="stat-label">Kundenbewertung</span></div>
       </div>
     </div>
 

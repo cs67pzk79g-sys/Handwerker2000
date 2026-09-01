@@ -607,6 +607,23 @@ input:not([type="range"]):focus-visible {
   border-top: 1px solid var(--color-border);
 }
 
+/* Modul-Anzeige: dezente Sonnenkraftwerks-"Gauge" statt reiner Zahl --
+   Anzahl leuchtender Module wächst/schrumpft mit dem Regler-Wert. */
+.module-gauge {
+  display: flex;
+  gap: 3px;
+  margin-top: 7px;
+  flex-wrap: wrap;
+}
+
+.module-icon {
+  color: var(--color-border);
+  transition: color 0.25s ease;
+  flex-shrink: 0;
+}
+
+.module-icon.is-active { color: var(--color-accent); }
+
 /* Statistik-Leiste: helle Spec-Zeile mit Haarlinie statt dunklem Balken */
 .stat-bar {
   background: var(--color-bg);
@@ -695,10 +712,14 @@ input:not([type="range"]):focus-visible {
   border: 1px solid var(--color-border);
   border-radius: var(--radius);
   padding: 28px;
-  transition: border-color 0.2s ease;
+  transition: border-color 0.2s ease, transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.card:hover { border-color: var(--color-accent); }
+.card:hover {
+  border-color: var(--color-accent);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow);
+}
 
 .service-icon {
   width: 48px;
@@ -709,6 +730,12 @@ input:not([type="range"]):focus-visible {
   align-items: center;
   justify-content: center;
   margin-bottom: 16px;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.card:hover .service-icon,
+.team-card:hover .team-avatar {
+  transform: rotate(-6deg) scale(1.08);
 }
 
 .service-card h3 { font-size: 1.08rem; margin-bottom: 8px; }
@@ -898,10 +925,14 @@ a.service-card { display: block; }
   display: flex;
   align-items: center;
   gap: 14px;
-  transition: border-color 0.2s ease;
+  transition: border-color 0.2s ease, transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.result-card:hover { border-color: var(--color-accent); }
+.result-card:hover {
+  border-color: var(--color-accent);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow);
+}
 
 .result-icon {
   width: 38px;
@@ -912,7 +943,10 @@ a.service-card { display: block; }
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
+
+.result-card:hover .result-icon { transform: rotate(-6deg) scale(1.08); }
 
 .result-label { display: block; font-size: 0.86rem; color: var(--color-text-muted); font-weight: 500; margin-bottom: 2px; }
 .result-value { display: block; font-family: var(--font-mono); font-weight: 500; font-size: 1.2rem; color: var(--color-primary); }
@@ -936,6 +970,12 @@ a.service-card { display: block; }
   position: relative;
   overflow: hidden;
 }
+
+.ref-photo,
+.ref-photo::before { transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1); }
+
+.ref-card:hover .ref-photo { transform: scale(1.04); }
+.ref-card:hover .ref-photo::before { transform: rotate(-4deg) scale(1.08); }
 
 .ref-photo::before {
   content: "";
@@ -1013,6 +1053,13 @@ a.service-card { display: block; }
   border-radius: var(--radius);
   padding: 26px;
   margin: 0;
+  transition: border-color 0.2s ease, transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.testimonial:hover {
+  border-color: var(--color-accent);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow);
 }
 
 .stars { color: var(--color-accent); letter-spacing: 2px; margin-bottom: 10px; }
@@ -1321,6 +1368,7 @@ a.service-card { display: block; }
   align-items: center;
   justify-content: center;
   color: var(--color-ink-fixed);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .team-avatar-1 { background: linear-gradient(135deg, #efeae0 0%, #e0d6bf 100%); }
@@ -1487,12 +1535,22 @@ a.service-card { display: block; }
   padding: 16px 18px;
   font-size: 0.95rem;
   color: var(--color-text);
+  transition: border-color 0.2s ease, transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.feature-list li:hover {
+  border-color: var(--color-accent);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow);
 }
 
 .feature-list li svg { flex-shrink: 0; margin-top: 2px; }
 
 .detail-cta {
   background: var(--color-ink-fixed);
+  background-image:
+    repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.04) 0, rgba(255, 255, 255, 0.04) 1px, transparent 1px, transparent 26px),
+    repeating-linear-gradient(-45deg, rgba(255, 255, 255, 0.04) 0, rgba(255, 255, 255, 0.04) 1px, transparent 1px, transparent 26px);
   border-radius: var(--radius);
   padding: 48px 40px;
   text-align: center;
@@ -1525,7 +1583,17 @@ a.service-card { display: block; }
 }
 
 /* ---------- Footer ---------- */
-.site-footer { background: var(--color-ink-fixed-dark); color: #d9d0bd; padding: 60px 0 0; }
+/* Dezentes Diagonal-Raster auf den festen dunklen Flaechen (Footer, CTA-Band)
+   -- erinnert an eine Solarzellen-Gitterstruktur und funktioniert als
+   wiederkehrendes, sehr zurueckhaltendes Markenzeichen ueber die ganze Seite. */
+.site-footer {
+  background: var(--color-ink-fixed-dark);
+  background-image:
+    repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.04) 0, rgba(255, 255, 255, 0.04) 1px, transparent 1px, transparent 26px),
+    repeating-linear-gradient(-45deg, rgba(255, 255, 255, 0.04) 0, rgba(255, 255, 255, 0.04) 1px, transparent 1px, transparent 26px);
+  color: #d9d0bd;
+  padding: 60px 0 0;
+}
 
 .footer-grid {
   display: grid;
@@ -1649,6 +1717,14 @@ a.service-card { display: block; }
 }
 .reveal.is-visible { opacity: 1; transform: translateY(0); }
 
+/* Referenzen-Kacheln landen mit einem Hauch Skalierung statt nur zu faden --
+   gibt der Sektion beim Scrollen etwas mehr Praesenz. Die .is-visible-Regel
+   braucht hier eine eigene, spezifischere Zeile, sonst gewinnt diese Regel
+   den Spezifitaets-Gleichstand per Quellreihenfolge und der Reveal blockiert
+   dauerhaft im Ausgangszustand. */
+.ref-card.reveal { transform: translateY(22px) scale(0.96); }
+.ref-card.reveal.is-visible { transform: translateY(0); }
+
 /* ---------- Responsive ---------- */
 @media (max-width: 1200px) {
   .nav-toggle { display: flex; }
@@ -1744,6 +1820,15 @@ a.service-card { display: block; }
   .card:hover, .card:active { transform: none; }
   .btn:hover, .btn:active { transform: none; box-shadow: none; }
   .fab:hover { transform: none; }
+  .card:hover .service-icon,
+  .team-card:hover .team-avatar,
+  .result-card:hover .result-icon,
+  .testimonial:hover,
+  .feature-list li:hover,
+  .ref-card:hover .ref-photo,
+  .ref-card:hover .ref-photo::before {
+    transform: none;
+  }
 }
 
 /* ---------- Hero: Tablet / Mobil (Rechner unter den Text, volle Breite) ---------- */
