@@ -14,7 +14,12 @@
 # Baseline security headers. script-src/style-src need 'unsafe-inline'
 # since the site is static HTML with inline JSON-LD blocks and a couple
 # of small inline scripts/styles (no build step to hash or nonce them).
-# frame-src allows the Google Maps embed on the Kontakt section.
+# frame-src allows the Google Maps embed on the Kontakt section (loaded
+# only after a user click, see js/script.js). script-src/connect-src
+# allow Google Analytics (GA4) so the cookie-consent-gated loader in
+# js/script.js can fetch gtag.js and send hits *after* the user opts in
+# via the cookie banner - CSP only permits the domain, the JS still
+# decides whether/when to actually request it.
 [[headers]]
   for = "/*"
   [headers.values]
@@ -22,4 +27,4 @@
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
     Permissions-Policy = "camera=(), microphone=(), geolocation=(), payment=()"
-    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; frame-src https://www.google.com; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'"
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; frame-src https://www.google.com; connect-src 'self' https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'"

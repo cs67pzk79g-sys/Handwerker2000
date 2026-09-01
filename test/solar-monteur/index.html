@@ -127,20 +127,11 @@
 </script>
 
 <!--
-  Google Analytics (GA4) – bereit zum Aktivieren
-  1. Messungs-ID unter analytics.google.com anlegen und "G-XXXXXXXXXX" ersetzen
-  2. Die zwei <script>-Tags unten einkommentieren
-  3. WICHTIG (DSGVO): In Deutschland braucht es vorher eine Cookie-/Consent-
-     Lösung, die GA erst nach Einwilligung lädt (z. B. Consent-Mode/Banner).
-     Bis dahin bleibt dieser Block bewusst deaktiviert.
-
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){ dataLayer.push(arguments); }
-  gtag('js', new Date());
-  gtag('config', 'G-XXXXXXXXXX');
-</script>
+  Google Analytics (GA4): Das Laden erst NACH Consent ist jetzt zentral in
+  js/script.js implementiert (Cookie-Banner unten im Body, Funktion
+  loadGoogleAnalytics()). TODO: Die dortige Platzhalter-Messungs-ID
+  "G-XXXXXXXXXX" unter analytics.google.com durch eine echte ersetzen,
+  bevor reale Analytics-Daten erfasst werden sollen.
 -->
 </head>
 <body>
@@ -676,12 +667,13 @@
           </li>
         </ul>
 
-        <div class="map-embed">
-          <iframe
-            src="https://www.google.com/maps?q=Musterstra%C3%9Fe+12,+79098+Freiburg+im+Breisgau&output=embed"
-            width="100%" height="280" style="border:0" loading="lazy"
-            referrerpolicy="no-referrer-when-downgrade"
-            title="Kartenausschnitt: Anfahrt zu Sonnenwerk Solartechnik, Musterstraße 12, Freiburg"></iframe>
+        <div class="map-embed" id="mapEmbed" data-map-src="https://www.google.com/maps?q=Musterstra%C3%9Fe+12,+79098+Freiburg+im+Breisgau&output=embed">
+          <div class="map-placeholder">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 21s-7-6.2-7-11a7 7 0 1 1 14 0c0 4.8-7 11-7 11z" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="10" r="2.5" stroke="currentColor" stroke-width="1.8"/></svg>
+            <p>Hier lässt sich eine Karte von Google Maps laden.</p>
+            <button type="button" class="btn btn-primary" id="mapLoadBtn">Karte laden</button>
+            <p class="map-placeholder-note">Beim Laden wird eine Verbindung zu Google-Servern hergestellt und Ihre IP-Adresse übertragen. Details in unserer <a href="datenschutz.html">Datenschutzerklärung</a>.</p>
+          </div>
         </div>
         <div class="map-actions">
           <a class="btn btn-ghost" href="https://www.google.com/maps/dir/?api=1&destination=Musterstra%C3%9Fe+12%2C+79098+Freiburg+im+Breisgau" target="_blank" rel="noopener"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 21s-7-6.2-7-11a7 7 0 1 1 14 0c0 4.8-7 11-7 11z" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="10" r="2.5" stroke="currentColor" stroke-width="2"/></svg>Route planen</a>
@@ -769,6 +761,7 @@
   <div class="container footer-bottom">
     <span>&copy; <span id="year"></span> Sonnenwerk Solartechnik &ndash; fiktiver Musterbetrieb.</span>
     <span class="footer-demo-note">Diese Seite ist ein Demo-/Vorzeigeprojekt ohne reale Geschäftstätigkeit.</span>
+    <button type="button" class="footer-cookie-link" id="cookieSettingsLink">Cookie-Einstellungen</button>
   </div>
 </footer>
 
@@ -777,7 +770,22 @@
   <span class="fab-label">Jetzt anrufen</span>
   <span class="fab-badge">24/7</span>
 </a>
+<div class="cookie-banner" id="cookieBanner" role="region" aria-label="Cookie-Einstellungen" hidden>
+  <div class="cookie-banner-inner">
+    <p class="cookie-banner-text">
+      Wir verwenden nur technisch notwendige Cookies, damit diese Seite funktioniert.
+      Mit Ihrer Einwilligung nutzen wir zusätzlich Google Analytics (GA4), um die
+      Seite zu verbessern. Details dazu in unserer
+      <a href="datenschutz.html">Datenschutzerklärung</a>.
+    </p>
+    <div class="cookie-banner-actions">
+      <button type="button" class="btn btn-ghost" id="cookieRejectAll">Alle ablehnen</button>
+      <button type="button" class="btn btn-primary" id="cookieAcceptAll">Alle akzeptieren</button>
+    </div>
+  </div>
+</div>
 
 <script src="js/script.js"></script>
+
 </body>
 </html>

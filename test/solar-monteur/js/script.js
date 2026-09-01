@@ -236,4 +236,125 @@
   if (yearEl) {
     yearEl.textContent = String(new Date().getFullYear());
   }
+
+  // ---------- Google Maps: load only after user click ----------
+  // Vermeidet, dass beim Seitenaufruf automatisch eine Verbindung zu
+  // Google-Servern hergestellt wird (IP-Übertragung ohne Einwilligung).
+  var mapEmbed = document.getElementById("mapEmbed");
+  var mapLoadBtn = document.getElementById("mapLoadBtn");
+
+  if (mapEmbed && mapLoadBtn) {
+    mapLoadBtn.addEventListener("click", function () {
+      var src = mapEmbed.getAttribute("data-map-src");
+      var iframe = document.createElement("iframe");
+      iframe.src = src;
+      iframe.width = "100%";
+      iframe.height = "280";
+      iframe.style.border = "0";
+      iframe.loading = "lazy";
+      iframe.referrerPolicy = "no-referrer-when-downgrade";
+      iframe.title = "Kartenausschnitt: Anfahrt zu Sonnenwerk Solartechnik, Musterstraße 12, Freiburg";
+      mapEmbed.innerHTML = "";
+      mapEmbed.appendChild(iframe);
+    });
+  }
+
+  // ---------- Cookie-Consent (§ 25 TDDDG / DSGVO) ----------
+  // Technisch notwendige Funktionen (Formular, Navigation, Rechner) laufen
+  // immer. Google Analytics (GA4) wird erst nach aktiver Einwilligung über
+  // dieses Banner nachgeladen, nie automatisch beim Seitenaufruf.
+  var COOKIE_CONSENT_KEY = "cookieConsent"; // "accepted" | "rejected"
+
+  // TODO: Platzhalter-Messungs-ID. Vor echtem Live-Betrieb mit einer
+  // echten GA4-Property-ID (angelegt unter analytics.google.com) ersetzen.
+  // Mit dieser Platzhalter-ID werden auch nach Einwilligung keine echten
+  // Analysedaten an Google übermittelt, siehe datenschutz.html.
+  var GA_MEASUREMENT_ID = "G-XXXXXXXXXX";
+
+  var cookieBanner = document.getElementById("cookieBanner");
+  var cookieAcceptBtn = document.getElementById("cookieAcceptAll");
+  var cookieRejectBtn = document.getElementById("cookieRejectAll");
+  var cookieSettingsLink = document.getElementById("cookieSettingsLink");
+
+  function readConsent() {
+    try {
+      return localStorage.getItem(COOKIE_CONSENT_KEY);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function writeConsent(value) {
+    try {
+      if (value === null) {
+        localStorage.removeItem(COOKIE_CONSENT_KEY);
+      } else {
+        localStorage.setItem(COOKIE_CONSENT_KEY, value);
+      }
+    } catch (e) {}
+  }
+
+  function loadGoogleAnalytics() {
+    if (window.__gaLoaded) return;
+    window.__gaLoaded = true;
+
+    var gaScript = document.createElement("script");
+    gaScript.async = true;
+    gaScript.src = "https://www.googletagmanager.com/gtag/js?id=" + GA_MEASUREMENT_ID;
+    document.head.appendChild(gaScript);
+
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { window.dataLayer.push(arguments); }
+    window.gtag = gtag;
+    gtag("js", new Date());
+    gtag("config", GA_MEASUREMENT_ID);
+  }
+
+  function deleteAnalyticsCookies() {
+    document.cookie.split(";").forEach(function (entry) {
+      var name = entry.split("=")[0].trim();
+      if (/^_ga|^_gid|^_gat/.test(name)) {
+        document.cookie = name + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+      }
+    });
+  }
+
+  function showCookieBanner() {
+    if (cookieBanner) cookieBanner.hidden = false;
+  }
+
+  function hideCookieBanner() {
+    if (cookieBanner) cookieBanner.hidden = true;
+  }
+
+  function applyConsent(choice) {
+    writeConsent(choice);
+    hideCookieBanner();
+    if (choice === "accepted") loadGoogleAnalytics();
+  }
+
+  if (cookieBanner) {
+    var storedConsent = readConsent();
+    if (storedConsent === "accepted") {
+      loadGoogleAnalytics();
+    } else if (storedConsent !== "rejected") {
+      showCookieBanner();
+    }
+
+    if (cookieAcceptBtn) {
+      cookieAcceptBtn.addEventListener("click", function () { applyConsent("accepted"); });
+    }
+    if (cookieRejectBtn) {
+      cookieRejectBtn.addEventListener("click", function () { applyConsent("rejected"); });
+    }
+  }
+
+  // Widerruf: Link im Footer, auf jeder Seite verfügbar.
+  if (cookieSettingsLink) {
+    cookieSettingsLink.addEventListener("click", function () {
+      writeConsent(null);
+      deleteAnalyticsCookies();
+      showCookieBanner();
+    });
+  }
 })();
