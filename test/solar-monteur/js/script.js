@@ -57,6 +57,41 @@
   setupScrollSpy(".main-nav a[href^=\"#\"]:not(.btn)");
   setupScrollSpy(".detail-quicknav a[href^=\"#\"]");
 
+  // ---------- Theme-Toggle (hell/dunkel/System) ----------
+  // Die Startpraeferenz wird bereits per Inline-Skript im <head> gesetzt, um
+  // ein Aufblitzen des falschen Themes beim Laden zu vermeiden. Hier folgt
+  // nur noch die Umschalt-Interaktion inkl. Persistenz in localStorage.
+  var themeToggle = document.getElementById("themeToggle");
+
+  function getEffectiveTheme() {
+    var explicit = document.documentElement.getAttribute("data-theme");
+    if (explicit === "light" || explicit === "dark") return explicit;
+    return window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches
+      ? "dark"
+      : "light";
+  }
+
+  function updateThemeToggleLabel() {
+    if (!themeToggle) return;
+    var effective = getEffectiveTheme();
+    themeToggle.setAttribute(
+      "aria-label",
+      effective === "dark" ? "Helles Design aktivieren" : "Dunkles Design aktivieren"
+    );
+  }
+
+  if (themeToggle) {
+    updateThemeToggleLabel();
+    themeToggle.addEventListener("click", function () {
+      var next = getEffectiveTheme() === "dark" ? "light" : "dark";
+      document.documentElement.setAttribute("data-theme", next);
+      try {
+        localStorage.setItem("theme", next);
+      } catch (e) {}
+      updateThemeToggleLabel();
+    });
+  }
+
   // ---------- Sticky header shadow ----------
   var header = document.getElementById("siteHeader");
   if (header) {
@@ -266,14 +301,61 @@
       .join("&");
   }
 
+  // Eigene, freundliche Inline-Fehlermeldungen statt der Browser-Standard-
+  // Validierungs-Sprechblasen (das Formular traegt dafuer "novalidate").
+  var FIELD_MESSAGES = {
+    name: "Bitte geben Sie Ihren Namen ein.",
+    email: {
+      typeMismatch: "Bitte geben Sie eine gültige E-Mail-Adresse ein.",
+      valueMissing: "Bitte geben Sie Ihre E-Mail-Adresse ein.",
+    },
+    datenschutz: "Bitte bestätigen Sie die Datenschutzhinweise.",
+  };
+
+  function fieldMessage(input) {
+    var msgs = FIELD_MESSAGES[input.name];
+    if (typeof msgs === "string") return msgs;
+    if (msgs && input.validity.typeMismatch) return msgs.typeMismatch;
+    if (msgs && input.validity.valueMissing) return msgs.valueMissing;
+    return "Bitte überprüfen Sie dieses Feld.";
+  }
+
+  function validateField(input) {
+    var errorEl = document.getElementById(input.id + "Error");
+    var wrapper = input.closest(".field");
+    var valid = input.validity.valid;
+    if (wrapper) wrapper.classList.toggle("is-invalid", !valid);
+    if (errorEl) {
+      errorEl.textContent = valid ? "" : fieldMessage(input);
+      errorEl.hidden = valid;
+    }
+    return valid;
+  }
+
   if (form) {
     var formError = document.getElementById("kontaktFormError");
+    var requiredFields = [
+      document.getElementById("name"),
+      document.getElementById("email"),
+      document.getElementById("datenschutz"),
+    ].filter(Boolean);
+
+    requiredFields.forEach(function (input) {
+      input.addEventListener("input", function () { validateField(input); });
+      input.addEventListener("change", function () { validateField(input); });
+    });
 
     form.addEventListener("submit", function (event) {
       event.preventDefault();
 
-      if (!form.checkValidity()) {
-        form.reportValidity();
+      var firstInvalid = null;
+      requiredFields.forEach(function (input) {
+        var valid = validateField(input);
+        if (!valid && !firstInvalid) firstInvalid = input;
+      });
+
+      if (firstInvalid) {
+        firstInvalid.focus();
         return;
       }
 

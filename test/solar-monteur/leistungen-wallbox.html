@@ -2,6 +2,7 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
+<script>(function(){try{var t=localStorage.getItem('theme');if(t==='light'||t==='dark'){document.documentElement.setAttribute('data-theme',t);}}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#1a160f">
 <title>Wallbox &amp; E-Mobilität – Sonnenwerk Solartechnik</title>
@@ -128,6 +129,10 @@
     </nav>
 
     <div class="header-cta">
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="Dunkles Design aktivieren">
+        <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="4.2" stroke="currentColor" stroke-width="2"/><g stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="2.5" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="21.5"/><line x1="2.5" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="21.5" y2="12"/><line x1="5" y1="5" x2="6.8" y2="6.8"/><line x1="17.2" y1="17.2" x2="19" y2="19"/><line x1="19" y1="5" x2="17.2" y2="6.8"/><line x1="6.8" y1="17.2" x2="5" y2="19"/></g></svg>
+        <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20.5 14.7A8.5 8.5 0 1 1 9.3 3.5a7 7 0 0 0 11.2 11.2z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+      </button>
       <a href="index.html#kontakt" class="btn btn-primary">Beratungstermin</a>
     </div>
 
@@ -149,7 +154,8 @@
   </div>
 
   <section class="section detail-hero">
-    <div class="container">
+    <div class="container detail-hero-grid">
+      <div>
       <div class="detail-hero-head">
         <div class="detail-icon" aria-hidden="true">
           <svg width="32" height="32" viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="12" height="15" rx="2.5" stroke="#262019" stroke-width="2"/><path d="M16 10.3h2a1.7 1.7 0 0 1 1.7 1.7v2A1.7 1.7 0 0 1 18 15.7h-2" stroke="#262019" stroke-width="2" stroke-linecap="round"/><path d="M11.6 8 9 11.7h1.9L10 15.2l3.6-4.2h-1.8z" fill="#d9a03c"/></svg>
@@ -163,6 +169,21 @@
       <div class="detail-actions">
         <a href="index.html#kontakt" class="btn btn-primary btn-lg">Kostenlose Beratung anfragen</a>
         <a href="index.html#leistungen" class="btn btn-ghost btn-lg">Zur Leistungsübersicht</a>
+      </div>
+      </div>
+      <div class="spec-sheet">
+        <div class="spec-sheet-head"><span>Technisches Datenblatt</span><span>Standard-Wallbox</span></div>
+        <div class="spec-sheet-title">
+          <strong>Typ-2-Ladestation</strong>
+          <span>Für Einfamilienhaus-Stellplatz</span>
+        </div>
+        <dl class="spec-sheet-rows">
+          <div><dt>Ladeleistung</dt><dd>11–22 kW</dd></div>
+          <div><dt>Ladezeit</dt><dd>≈ 4–8 Std.</dd></div>
+          <div><dt>Anschluss</dt><dd>Typ 2, geeicht</dd></div>
+          <div class="hi"><dt>Solar-Ladeanteil</dt><dd>bis 100 %</dd></div>
+        </dl>
+        <p class="spec-sheet-foot">Werte beispielhaft · abhängig von Fahrzeug und Hausanschluss</p>
       </div>
     </div>
   </section>
