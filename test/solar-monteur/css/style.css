@@ -274,12 +274,13 @@ input:not([type="range"]):focus-visible {
   justify-content: center;
   gap: 8px;
   padding: 12px 22px;
-  border-radius: var(--radius);
+  border-radius: 999px;
   font-weight: 500;
   font-size: 0.95rem;
   cursor: pointer;
   border: 1px solid transparent;
-  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease,
+    transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   white-space: nowrap;
 }
 
@@ -288,7 +289,11 @@ input:not([type="range"]):focus-visible {
   color: var(--color-primary);
 }
 
-.btn-primary:hover { background: var(--color-accent-dark); }
+.btn-primary:hover {
+  background: var(--color-accent-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px rgba(217, 160, 60, 0.4);
+}
 
 .btn-ghost {
   background: transparent;
@@ -296,9 +301,14 @@ input:not([type="range"]):focus-visible {
   color: var(--color-primary);
 }
 
-.btn-ghost:hover { border-color: var(--color-accent); color: var(--color-accent); }
+.btn-ghost:hover {
+  border-color: var(--color-accent);
+  color: var(--color-blue);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
 
-.btn:active { opacity: 0.85; }
+.btn:active { transform: translateY(0) scale(0.96); transition-duration: 0.1s; }
 
 .btn-lg { padding: 15px 28px; font-size: 1rem; }
 .btn-block { width: 100%; }
@@ -1012,14 +1022,18 @@ a.service-card { display: block; }
   background: var(--color-primary);
   color: #fff;
   padding: 14px 20px;
-  border-radius: var(--radius);
+  border-radius: 999px;
   box-shadow: 0 12px 28px rgba(38, 32, 22, 0.28);
   font-weight: 500;
   font-size: 0.92rem;
-  transition: background 0.15s ease;
+  transition: background 0.2s ease, transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.fab:hover { background: var(--color-primary-dark); }
+.fab:hover {
+  background: var(--color-primary-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 16px 32px rgba(38, 32, 22, 0.36);
+}
 
 .fab .fab-badge {
   background: var(--color-accent);
@@ -1028,7 +1042,7 @@ a.service-card { display: block; }
   font-weight: 600;
   letter-spacing: 0.02em;
   padding: 2px 7px;
-  border-radius: var(--radius);
+  border-radius: 999px;
 }
 
 @media (max-width: 480px) {
@@ -1358,7 +1372,8 @@ a.service-card { display: block; }
   .main-nav { transition: opacity 0.15s linear, visibility 0s linear 0.15s; transform: none !important; }
   .main-nav.is-open { transition: opacity 0.15s linear, visibility 0s linear 0s; }
   .card:hover, .card:active { transform: none; }
-  .btn:active { transform: none; }
+  .btn:hover, .btn:active { transform: none; box-shadow: none; }
+  .fab:hover { transform: none; }
 }
 
 /* ---------- Hero: Tablet / Mobil (Diagramm verkleinert unter den Text) ---------- */
