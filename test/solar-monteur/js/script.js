@@ -57,6 +57,41 @@
   setupScrollSpy(".main-nav a[href^=\"#\"]:not(.btn)");
   setupScrollSpy(".detail-quicknav a[href^=\"#\"]");
 
+  // ---------- Theme-Toggle (hell/dunkel/System) ----------
+  // Die Startpraeferenz wird bereits per Inline-Skript im <head> gesetzt, um
+  // ein Aufblitzen des falschen Themes beim Laden zu vermeiden. Hier folgt
+  // nur noch die Umschalt-Interaktion inkl. Persistenz in localStorage.
+  var themeToggle = document.getElementById("themeToggle");
+
+  function getEffectiveTheme() {
+    var explicit = document.documentElement.getAttribute("data-theme");
+    if (explicit === "light" || explicit === "dark") return explicit;
+    return window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches
+      ? "dark"
+      : "light";
+  }
+
+  function updateThemeToggleLabel() {
+    if (!themeToggle) return;
+    var effective = getEffectiveTheme();
+    themeToggle.setAttribute(
+      "aria-label",
+      effective === "dark" ? "Helles Design aktivieren" : "Dunkles Design aktivieren"
+    );
+  }
+
+  if (themeToggle) {
+    updateThemeToggleLabel();
+    themeToggle.addEventListener("click", function () {
+      var next = getEffectiveTheme() === "dark" ? "light" : "dark";
+      document.documentElement.setAttribute("data-theme", next);
+      try {
+        localStorage.setItem("theme", next);
+      } catch (e) {}
+      updateThemeToggleLabel();
+    });
+  }
+
   // ---------- Sticky header shadow ----------
   var header = document.getElementById("siteHeader");
   if (header) {
