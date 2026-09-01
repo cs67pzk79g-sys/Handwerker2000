@@ -248,17 +248,31 @@
 
       <div class="hero-diagram reveal" aria-hidden="true">
         <svg viewBox="0 0 340 300" width="100%" height="100%">
+          <!-- Sonne -->
+          <g stroke="#a8621c" stroke-width="1.4" stroke-linecap="round">
+            <circle cx="205" cy="50" r="9" fill="none" />
+            <path d="M217 50 L224 50 M213.5 58.5 L218.4 63.4 M205 62 L205 69 M196.5 58.5 L191.6 63.4 M193 50 L186 50 M196.5 41.5 L191.6 36.6 M205 38 L205 31 M213.5 41.5 L218.4 36.6" />
+          </g>
+          <!-- Dach -->
           <g fill="none" stroke="currentColor" stroke-width="1.1">
             <path d="M40 230 L170 150 L300 230 L170 300 Z" />
             <path d="M40 230 L170 90 L300 230" />
             <path d="M105 195 L235 195 M76 213 L264 213 M170 150 L170 300" stroke-dasharray="2 4" />
-            <path d="M170 90 L170 40 M170 40 L150 55 M170 40 L190 55" />
-            <rect x="60" y="150" width="30" height="18" rx="1" />
-            <rect x="100" y="130" width="30" height="18" rx="1" />
-            <rect x="140" y="110" width="30" height="18" rx="1" />
           </g>
-          <g fill="none" stroke="#a8621c" stroke-width="1.4">
-            <rect x="180" y="130" width="30" height="18" rx="1" />
+          <!-- Modulfeld: 3x3-Raster mit Zellenlinien, wie im Leistungs-Icon -->
+          <g fill="none" stroke="currentColor" stroke-width="1">
+            <rect x="52" y="178" width="27" height="15" rx="1" /><rect x="84" y="172" width="27" height="15" rx="1" /><rect x="116" y="166" width="27" height="15" rx="1" />
+            <rect x="66" y="158" width="27" height="15" rx="1" /><rect x="98" y="152" width="27" height="15" rx="1" /><rect x="130" y="146" width="27" height="15" rx="1" />
+            <rect x="80" y="138" width="27" height="15" rx="1" /><rect x="112" y="132" width="27" height="15" rx="1" />
+          </g>
+          <g stroke="currentColor" stroke-width="0.6" opacity="0.55">
+            <path d="M61 178 V193 M70 178 V193 M52 185.5 H79 M93 172 V187 M102 172 V187 M84 179.5 H111 M125 166 V181 M134 166 V181 M116 173.5 H143 M75 158 V173 M84 158 V173 M66 165.5 H93 M107 152 V167 M116 152 V167 M98 159.5 H125 M139 146 V161 M148 146 V161 M130 153.5 H157 M89 138 V153 M98 138 V153 M80 145.5 H107 M121 132 V147 M130 132 V147 M112 139.5 H139" />
+          </g>
+          <g fill="#f4e3ce" stroke="#a8621c" stroke-width="1.3">
+            <rect x="144" y="126" width="27" height="15" rx="1" />
+          </g>
+          <g stroke="#a8621c" stroke-width="0.7">
+            <path d="M153 126 V141 M162 126 V141 M144 133.5 H171" />
           </g>
         </svg>
         <p class="hero-diagram-caption">Modulfeld &middot; 6,7&nbsp;kWp &middot; Südausrichtung 32&deg;</p>

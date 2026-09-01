@@ -1360,10 +1360,10 @@ a.service-card { display: block; }
   .btn:active { transform: none; }
 }
 
-/* ---------- Hero: Tablet / Mobil (Diagramm ausgeblendet, Copy volle Breite) ---------- */
+/* ---------- Hero: Tablet / Mobil (Diagramm verkleinert unter den Text) ---------- */
 @media (max-width: 1200px) {
   .hero-inner { padding: 56px 24px 8px; }
-  .hero-diagram { display: none; }
+  .hero-diagram { max-width: 360px; margin: 4px auto 0; }
   .hero-copy { max-width: none; }
   .hero-trust { white-space: normal; }
 }
@@ -1374,6 +1374,7 @@ a.service-card { display: block; }
 
 @media (max-width: 620px) {
   .hero-inner { padding: 48px 24px 8px; }
+  .hero-diagram { max-width: 280px; }
 
   .hero h1 { font-size: 2.1rem; line-height: 1.16; }
   .hero-sub { font-size: 1rem; margin-bottom: 24px; }
