@@ -6,16 +6,38 @@
   var mainNav = document.getElementById("mainNav");
 
   if (navToggle && mainNav) {
+    var closeMobileNav = function (opts) {
+      mainNav.classList.remove("is-open");
+      navToggle.setAttribute("aria-expanded", "false");
+      if (opts && opts.returnFocus) navToggle.focus();
+    };
+
     navToggle.addEventListener("click", function () {
       var isOpen = mainNav.classList.toggle("is-open");
       navToggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
     });
 
     mainNav.querySelectorAll("a").forEach(function (link) {
-      link.addEventListener("click", function () {
-        mainNav.classList.remove("is-open");
-        navToggle.setAttribute("aria-expanded", "false");
-      });
+      link.addEventListener("click", function () { closeMobileNav(); });
+    });
+
+    // Standard Verhalten fuer aufklappbare Menues: Escape schliesst und
+    // gibt den Fokus zurueck an den Toggle-Button; ein Klick ausserhalb
+    // schliesst ebenfalls.
+    document.addEventListener("keydown", function (event) {
+      if (event.key === "Escape" && mainNav.classList.contains("is-open")) {
+        closeMobileNav({ returnFocus: true });
+      }
+    });
+
+    document.addEventListener("click", function (event) {
+      if (
+        mainNav.classList.contains("is-open") &&
+        !mainNav.contains(event.target) &&
+        !navToggle.contains(event.target)
+      ) {
+        closeMobileNav();
+      }
     });
   }
 

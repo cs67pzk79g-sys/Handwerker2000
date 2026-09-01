@@ -960,7 +960,7 @@ a.service-card { display: block; }
 }
 
 /* ---------- Referenzen ---------- */
-.ref-card { margin: 0; }
+.ref-card { display: block; margin: 0; }
 
 .ref-photo {
   height: 180px;
@@ -1024,7 +1024,7 @@ a.service-card { display: block; }
 .ref-photo-5 { background: linear-gradient(135deg, #262019 0%, #8a6a3f 100%); }
 .ref-photo-6 { background: linear-gradient(135deg, #3d3226 0%, #d9a03c 100%); }
 
-.ref-card figcaption { display: flex; flex-direction: column; gap: 2px; }
+.ref-card .ref-caption { display: flex; flex-direction: column; gap: 2px; }
 .ref-card strong { color: var(--color-primary); font-size: 0.98rem; }
 .ref-card span { color: var(--color-text-muted); font-size: 0.85rem; }
 .ref-card .ref-result {
@@ -1032,6 +1032,19 @@ a.service-card { display: block; }
   font-size: 0.78rem;
   color: var(--color-blue);
   margin-top: 2px;
+}
+
+/* Grosse Platzhalter-Kachel auf den Referenz-Detailseiten (dort, wo ein
+   echtes Projektfoto stehen wuerde) -- nutzt bewusst dieselbe Gradient-
+   /Wasserzeichen-Grafik wie die Uebersichtskacheln statt echter Bilder. */
+.ref-photo-lg { height: 280px; margin-bottom: 24px; }
+.ref-photo-lg .ref-badge { font-size: 0.72rem; padding: 5px 10px; }
+
+.ref-detail-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 28px 40px;
+  margin: 24px 0 4px;
 }
 
 /* ---------- Förderung ---------- */
@@ -1608,7 +1621,7 @@ a.service-card { display: block; }
 .footer-brand p { color: #b8ab8f; font-size: 0.9rem; margin-top: 12px; }
 
 .footer-col { display: flex; flex-direction: column; gap: 10px; }
-.footer-col h4 { color: #fff; font-size: 0.92rem; margin-bottom: 4px; }
+.footer-col h2 { color: #fff; font-size: 0.92rem; font-weight: 600; margin: 0 0 4px; }
 .footer-col a, .footer-col span { color: #cabe9f; font-size: 0.9rem; }
 .footer-col a:hover { color: var(--color-accent); }
 
