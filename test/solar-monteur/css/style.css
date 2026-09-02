@@ -1197,7 +1197,7 @@ a.service-card { display: block; }
 .map-embed iframe { display: block; }
 
 .map-placeholder {
-  height: 280px;
+  min-height: 280px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1208,13 +1208,44 @@ a.service-card { display: block; }
   background: var(--color-bg-alt);
 }
 
-.map-placeholder svg { color: var(--color-blue); }
-
 .map-placeholder p {
   margin: 0;
   color: var(--color-text-muted);
   font-size: 0.9rem;
   max-width: 380px;
+}
+
+/* Stilisierte Einsatzgebiets-Grafik: kein echtes Kartenmaterial (keine
+   Drittanbieter-Verbindung vor Klick auf "Karte laden"), sondern eine
+   Illustration mit denselben Kartennadel-Icons wie im Rest der Seite:
+   Freiburg im Zentrum, die 5 Orte der Referenzprojekte drumherum, dazu
+   ein weicher Schimmer statt einer technischen Radius-Linie. */
+.radius-map {
+  width: 100%;
+  max-width: 320px;
+  height: auto;
+}
+
+.glow-stop-inner { stop-color: var(--color-accent); stop-opacity: 0.16; }
+.glow-stop-outer { stop-color: var(--color-accent); stop-opacity: 0; }
+
+.pin-shape { fill: var(--color-blue); }
+.pin-dot { fill: var(--color-bg-alt); }
+
+.pin-shape-center { fill: var(--color-accent); }
+.pin-dot-center { fill: var(--color-bg-alt); }
+
+.radius-town text {
+  font-family: var(--font-heading);
+  font-size: 10px;
+  fill: var(--color-text-muted);
+}
+
+.radius-center-label {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 14px;
+  fill: var(--color-primary);
 }
 
 .map-placeholder-note {
