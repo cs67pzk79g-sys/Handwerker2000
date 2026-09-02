@@ -275,12 +275,16 @@
   var outKwp = document.getElementById("outKwp");
   var outSavings = document.getElementById("outSavings");
   var outPayback = document.getElementById("outPayback");
+  var paybackRingFill = document.getElementById("paybackRingFill");
+  var paybackRingLabel = document.getElementById("paybackRingLabel");
 
   var M2_PER_KWP = 6;
   var YIELD_PER_KWP = 950;
   var SELF_CONSUMPTION_SHARE = 0.3;
   var FEED_IN_TARIFF = 0.08;
   var COST_PER_KWP = 1500;
+  var SYSTEM_LIFETIME_YEARS = 25;
+  var RING_CIRCUMFERENCE = 2 * Math.PI * 26;
 
   function formatNumber(value, decimals) {
     return value.toLocaleString("de-DE", {
@@ -327,6 +331,12 @@
     outKwp.textContent = "≈ " + formatNumber(kwp, 1) + " kWp";
     outSavings.textContent = "≈ " + formatNumber(yearlySavings) + " € / Jahr";
     outPayback.textContent = "≈ " + formatNumber(paybackYears, 1) + " Jahre";
+
+    if (paybackRingFill && paybackRingLabel) {
+      var ringFraction = Math.min(Math.max(paybackYears / SYSTEM_LIFETIME_YEARS, 0), 1);
+      paybackRingFill.style.strokeDashoffset = String(RING_CIRCUMFERENCE * (1 - ringFraction));
+      paybackRingLabel.textContent = formatNumber(paybackYears, 1);
+    }
   }
 
   [roofArea, consumption, price].forEach(function (input) {

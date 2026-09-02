@@ -460,13 +460,18 @@
               <span class="result-value" id="outSavings">–</span>
             </div>
           </div>
-          <div class="result-card">
-            <div class="result-icon" aria-hidden="true">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8.3" stroke="#262019" stroke-width="2"/><path d="M12 7.3v5l3.3 2" stroke="#262019" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <div class="result-card result-card-payback">
+            <div class="result-ring" aria-hidden="true">
+              <svg viewBox="0 0 64 64" width="52" height="52">
+                <circle class="ring-track" cx="32" cy="32" r="26"></circle>
+                <circle class="ring-fill" id="paybackRingFill" cx="32" cy="32" r="26"></circle>
+              </svg>
+              <span class="ring-label" id="paybackRingLabel">–</span>
             </div>
             <div>
               <span class="result-label">Ungefähre Amortisationszeit</span>
               <span class="result-value" id="outPayback">–</span>
+              <span class="ring-context">Ring = Anteil an 25 Jahren Lebensdauer</span>
             </div>
           </div>
           <p class="calc-disclaimer">
