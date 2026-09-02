@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://sonnenwerksolartechnick.netlify.app/solar-monteur/sitemap.xml
+Sitemap: https://cs67pzk79g-sys.github.io/Handwerker2000/solar-monteur/sitemap.xml
