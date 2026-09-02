@@ -1216,48 +1216,35 @@ a.service-card { display: block; }
 }
 
 /* Stilisierte Einsatzgebiets-Grafik: kein echtes Kartenmaterial (keine
-   Drittanbieter-Verbindung vor Klick auf "Karte laden"), sondern ein
-   Radar-Diagramm mit Freiburg im Zentrum und den 5 Orten der Referenz-
-   projekte als Speichen -- macht den Platzhalter selbst zum Blickfang
-   statt nur ein generisches Pin-Icon zu zeigen. */
+   Drittanbieter-Verbindung vor Klick auf "Karte laden"), sondern eine
+   Illustration mit denselben Kartennadel-Icons wie im Rest der Seite:
+   Freiburg im Zentrum, die 5 Orte der Referenzprojekte drumherum, dazu
+   ein weicher Schimmer statt einer technischen Radius-Linie. */
 .radius-map {
   width: 100%;
   max-width: 320px;
   height: auto;
 }
 
-.radius-ring {
-  fill: var(--color-accent);
-  fill-opacity: 0.06;
-  stroke: var(--color-border);
-  stroke-width: 1.5;
-  stroke-dasharray: 4 4;
-}
+.glow-stop-inner { stop-color: var(--color-accent); stop-opacity: 0.16; }
+.glow-stop-outer { stop-color: var(--color-accent); stop-opacity: 0; }
 
-.radius-spoke {
-  stroke: var(--color-border);
-  stroke-width: 1;
-  stroke-dasharray: 2 4;
-}
+.pin-shape { fill: var(--color-blue); }
+.pin-dot { fill: var(--color-bg-alt); }
 
-.radius-town circle { fill: var(--color-blue); }
+.pin-shape-center { fill: var(--color-accent); }
+.pin-dot-center { fill: var(--color-bg-alt); }
 
 .radius-town text {
-  font-family: var(--font-mono);
-  font-size: 9px;
+  font-family: var(--font-heading);
+  font-size: 10px;
   fill: var(--color-text-muted);
 }
 
-.radius-center circle {
-  fill: var(--color-accent);
-  stroke: var(--color-bg-alt);
-  stroke-width: 3;
-}
-
-.radius-center text {
+.radius-center-label {
   font-family: var(--font-heading);
   font-weight: 600;
-  font-size: 13px;
+  font-size: 14px;
   fill: var(--color-primary);
 }
 
