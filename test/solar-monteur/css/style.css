@@ -1846,6 +1846,39 @@ a.service-card { display: block; }
   .ref-card span { line-height: 1.3; }
   .ref-card .service-more { margin-top: 6px; }
 
+  /* Team-Karten: Avatar neben statt über dem Text, wie bei den anderen
+     Icon-Karten -- spart deutlich Höhe bei 3 gestapelten Portraits. */
+  .team-card {
+    display: grid;
+    grid-template-columns: 56px 1fr;
+    column-gap: 14px;
+    row-gap: 1px;
+    align-items: start;
+    text-align: left;
+    padding: 16px;
+  }
+  .team-avatar {
+    grid-column: 1;
+    grid-row: 1 / 4;
+    width: 56px;
+    height: 56px;
+    margin: 0;
+  }
+  .team-avatar svg { width: 24px; height: 24px; }
+  .team-card h3 { grid-column: 2; grid-row: 1; font-size: 0.98rem; margin-bottom: 0; }
+  .team-role { grid-column: 2; grid-row: 2; margin-bottom: 4px; font-size: 0.78rem; }
+  .team-card p { grid-column: 2; grid-row: 3; font-size: 0.85rem; }
+
+  /* Förder-Karten: kein Icon, daher reicht engeres Padding. */
+  .funding-card { padding: 16px; }
+  .funding-card h3 { font-size: 0.98rem; margin-bottom: 4px; }
+  .funding-card p { font-size: 0.85rem; }
+
+  /* Rechner-Ergebniskarten sind bereits horizontal (Icon+Wert) -- nur
+     Innenabstand und Kartenabstand etwas enger. */
+  .calc-results { gap: 10px; }
+  .result-card { padding: 14px 16px; }
+
   .field-row { grid-template-columns: 1fr; }
   .footer-grid { grid-template-columns: 1fr; }
   .footer-bottom { flex-direction: column; text-align: center; }
