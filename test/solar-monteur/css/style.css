@@ -1197,7 +1197,7 @@ a.service-card { display: block; }
 .map-embed iframe { display: block; }
 
 .map-placeholder {
-  height: 280px;
+  min-height: 280px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1208,13 +1208,57 @@ a.service-card { display: block; }
   background: var(--color-bg-alt);
 }
 
-.map-placeholder svg { color: var(--color-blue); }
-
 .map-placeholder p {
   margin: 0;
   color: var(--color-text-muted);
   font-size: 0.9rem;
   max-width: 380px;
+}
+
+/* Stilisierte Einsatzgebiets-Grafik: kein echtes Kartenmaterial (keine
+   Drittanbieter-Verbindung vor Klick auf "Karte laden"), sondern ein
+   Radar-Diagramm mit Freiburg im Zentrum und den 5 Orten der Referenz-
+   projekte als Speichen -- macht den Platzhalter selbst zum Blickfang
+   statt nur ein generisches Pin-Icon zu zeigen. */
+.radius-map {
+  width: 100%;
+  max-width: 320px;
+  height: auto;
+}
+
+.radius-ring {
+  fill: var(--color-accent);
+  fill-opacity: 0.06;
+  stroke: var(--color-border);
+  stroke-width: 1.5;
+  stroke-dasharray: 4 4;
+}
+
+.radius-spoke {
+  stroke: var(--color-border);
+  stroke-width: 1;
+  stroke-dasharray: 2 4;
+}
+
+.radius-town circle { fill: var(--color-blue); }
+
+.radius-town text {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  fill: var(--color-text-muted);
+}
+
+.radius-center circle {
+  fill: var(--color-accent);
+  stroke: var(--color-bg-alt);
+  stroke-width: 3;
+}
+
+.radius-center text {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 13px;
+  fill: var(--color-primary);
 }
 
 .map-placeholder-note {
